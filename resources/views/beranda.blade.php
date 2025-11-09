@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Cipta Progresa Usaha' }}</title>
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/logocpu.png') }}"/>
+    <title>{{ $title ?? 'RekaWarisan' }}</title>
+    <!-- <link rel="icon" type="image/png" href="{{ asset('assets/img/logocpu.png') }}"/> -->
     <!-- link tailwind -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- link font awesome -->
