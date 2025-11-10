@@ -18,9 +18,16 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'full_name',
+        'username',
         'email',
         'password',
+        'province',
+        'regency',
+        'role',
+        'xp',
+        'level',
+        'badge_id',
     ];
 
     /**
@@ -39,7 +46,17 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'id' => 'integer',
+        'xp' => 'integer',
+        'level' => 'integer',
+        'badge_id' => 'integer',
+        'created_at' => 'datetime',
         'password' => 'hashed',
+        'role' => 'string',
     ];
+
+    public function badge()
+    {
+        return $this->belongsTo(Badge::class, 'badge_id');
+    }
 }
