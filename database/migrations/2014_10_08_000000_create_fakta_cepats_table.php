@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('status_unesco'); // Status pengakuan UNESCO
             $table->string('kategori'); // Jenis budaya
             $table->text('penampilan'); // Ciri khas / deskripsi singkat
-            $table->timestamp('created_at'); // Waktu dibuat
+            $table->timestamp('created_at')->useCurrent(); // Waktu dibuat
         });
     }
 

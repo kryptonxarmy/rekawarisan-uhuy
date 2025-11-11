@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id(); // Primary key
-            $table->string('full_name'); // Nama lengkap
+            $table->string('name'); // Nama lengkap
             $table->string('username')->unique(); // Username unik
             $table->string('email')->unique(); // Email unik
             $table->string('password'); // Password terenkripsi
-            $table->string('province'); // Provinsi asal
-            $table->string('regency'); // Kabupaten/Kota asal
+            $table->integer('province'); // Provinsi asal
+            $table->integer('regency'); // Kabupaten/Kota asal
+            $table->integer('district'); // Kecamatan asal
             $table->enum('role', ['admin', 'enduser']); // Role pengguna
             $table->integer('xp')->default(0); // Total XP pengguna
             $table->integer('level')->default(1); // Level pengguna

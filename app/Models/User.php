@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -18,12 +21,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'full_name',
+        'name',
         'username',
         'email',
         'password',
         'province',
         'regency',
+        'district',
         'role',
         'xp',
         'level',
@@ -49,6 +53,9 @@ class User extends Authenticatable
         'id' => 'integer',
         'xp' => 'integer',
         'level' => 'integer',
+        'province' => 'integer',
+        'regency' => 'integer',
+        'district' => 'integer',
         'badge_id' => 'integer',
         'created_at' => 'datetime',
         'password' => 'hashed',
@@ -58,5 +65,22 @@ class User extends Authenticatable
     public function badge()
     {
         return $this->belongsTo(Badge::class, 'badge_id');
+    }
+
+     public function canAccessPanel(Panel $panel): bool
+    {
+        // hanya role admin yang bisa login ke panel
+        return $this->role === 'admin';
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->name ?? $this->username ?? 'Admin';
+    }
+
+    public function getUserName(): string
+    {
+        $name = $this->name ?: ($this->username ?: 'Admin');
+        return (string) $name;
     }
 }
