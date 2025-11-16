@@ -1,29 +1,114 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+    <div class="w-full py-10 px-4 bg-gradient-to-b from-teal-50 to-white">
+        
+        {{-- Judul Halaman --}}
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-1">Profil Pengguna</h1>
+            <p class="text-gray-500">Kelola informasi pribadi Anda</p>
+        </div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
+        {{-- Container --}}
+        <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
+
+            {{-- Header Profil --}}
+            <div class="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-6 py-10 relative">
+
+                {{-- Tombol Kembali --}}
+                <a href="{{ url()->previous() }}"
+                    class="absolute top-6 left-6 bg-white/20 hover:bg-white/30 text-white px-4 py-2 text-sm rounded-lg backdrop-blur-md flex items-center gap-2 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Kembali
+                </a>
+
+                {{-- Tombol Edit --}}
+                <button onclick="document.getElementById('profile-section').scrollIntoView()"
+                    class="absolute top-6 right-6 bg-white text-teal-600 px-4 py-2 text-sm rounded-lg hover:bg-gray-100 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536M9 11l6.232-6.232a2 2 0 112.828 2.828L11.828 13.83a2 2 0 01-.707.464L7 15l1.707-4.121A2 2 0 019 11z" />
+                    </svg>
+                    Edit Profil
+                </button>
+
+                {{-- Foto Profil --}}
+                <div class="flex flex-col items-center mt-6">
+                    <div class="bg-white rounded-full w-28 h-28 flex items-center justify-center shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-teal-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.41 0-8 2.69-8 6v2h16v-2c0-3.31-3.59-6-8-6z" />
+                        </svg>
+                    </div>
+
+                    <h2 class="text-2xl font-semibold mt-4">{{ Auth::user()->name }}</h2>
+                    <p class="text-teal-100">{{ Auth::user()->email }}</p>
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
+            {{-- Bagian Form --}}
+            <div id="profile-section" class="px-8 py-10 space-y-10">
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
+                {{-- INFORMASI PRIBADI --}}
+                <div>
+                    <h3 class="text-lg font-semibold text-teal-700 flex items-center gap-2 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.41 0-8 2.69-8 6v2h16v-2c0-3.31-3.59-6-8-6z">
+                            </path>
+                        </svg>
+                        Informasi Pribadi
+                    </h3>
+
+                    {{-- Form Update Profil --}}
+                    <div class="bg-teal-50 p-6 rounded-lg shadow-sm">
+                        @include('profile.partials.update-profile-information-form')
+                    </div>
                 </div>
+
+                {{-- GANTI PASSWORD --}}
+                <div>
+                    <h3 class="text-lg font-semibold text-teal-700 flex items-center gap-2 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 11c1.657 0 3-1.343 3-3V6a3 3 0 00-6 0v2c0 1.657 1.343 3 3 3zm0 0v3m-6 4h12a2 2 0 002-2v-3a2 2 0 00-2-2H6a2 2 0 00-2 2v3a2 2 0 002 2z" />
+                        </svg>
+                        Ganti Password
+                    </h3>
+
+                    <div class="bg-teal-50 p-6 rounded-lg shadow-sm">
+                        @include('profile.partials.update-password-form')
+                    </div>
+                </div>
+
+                {{-- HAPUS AKUN --}}
+                <div>
+                    <h3 class="text-lg font-semibold text-red-600 flex items-center gap-2 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a2 2 0 00-2-2H9a2 2 0 00-2 2v3m12 0H5">
+                            </path>
+                        </svg>
+                        Hapus Akun
+                    </h3>
+
+                    <div class="bg-red-50 p-6 rounded-lg shadow-sm">
+                        @include('profile.partials.delete-user-form')
+                    </div>
+                </div>
+
             </div>
+        </div>
+
+        {{-- Copyright --}}
+        <div class="text-center text-gray-400 mt-8 mb-4">
+            ©2025 Reka Warisan, All Rights Reserved
         </div>
     </div>
 </x-app-layout>

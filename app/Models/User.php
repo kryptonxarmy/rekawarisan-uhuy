@@ -2,16 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 
-
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -67,12 +64,17 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(Badge::class, 'badge_id');
     }
 
-     public function canAccessPanel(Panel $panel): bool
+    /**
+     * Filament v3: menentukan siapa yang boleh akses panel.
+     */
+    public function canAccessPanel(Panel $panel): bool
     {
-        // hanya role admin yang bisa login ke panel
-        return $this->role === 'admin';
+        return $this->role === 'admin'; // Hanya admin bisa login ke Filament
     }
 
+    /**
+     * Nama yg ditampilkan di Filament.
+     */
     public function getFilamentName(): string
     {
         return $this->name ?? $this->username ?? 'Admin';
@@ -80,7 +82,6 @@ class User extends Authenticatable implements FilamentUser
 
     public function getUserName(): string
     {
-        $name = $this->name ?: ($this->username ?: 'Admin');
-        return (string) $name;
+        return (string) ($this->name ?: $this->username ?: 'Admin');
     }
 }

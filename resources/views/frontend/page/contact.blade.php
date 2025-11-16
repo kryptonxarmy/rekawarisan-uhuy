@@ -31,7 +31,7 @@
                         </div>
                         <div class="flex-1">
                             <p class="font-bold text-gray-900 text-lg mb-2">Lokasi</p>
-                            <p class="text-gray-700 font-medium">Desa Mungggulgebang</p>
+                            <p class="text-gray-700 font-medium">Desa Mungggugebang</p>
                             <p class="text-gray-600 text-sm">Kecamatan Banyeng, Kabupaten Gresik</p>
                         </div>
                     </div>
