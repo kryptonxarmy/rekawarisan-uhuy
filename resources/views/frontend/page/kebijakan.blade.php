@@ -4,14 +4,9 @@
 <!-- content for Kebijakan page goes here -->
  <div class="bg-gray-50 min-h-screen">
     
-    <!-- header -->
-    <section class="relative py-16 sm:py-24 bg-[#145D63] overflow-hidden">
-    
-        <div class="absolute inset-0 opacity-50 z-0" 
-            style="background-image: url('https://via.placeholder.com/1000x300.png?text=Pola+Batik+Teal'); background-repeat: repeat; background-size: 200px;">
-        </div>
-        
-        <div class="container mx-auto px-6 relative z-10">
+      <!-- hero section -->
+    <div class="min-h-[30vh] flex flex-col px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
+        <div class="container mt-5 p-4 relative z-10">
             
             <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
                 Kebijakan Privasi
@@ -24,10 +19,10 @@
             </div>
             
         </div>
-    </section>
+    </div>
     <!-- end -->
 
-    <main class="container mx-auto px-6 py-12 max-w-4xl bg-white shadow-xl md:rounded-lg mt-8 relative">
+    <main class="container mx-auto my-4 px-6 py-12 max-w-4xl bg-white shadow-xl md:rounded-lg mt-8 relative">
         
         <h1 class="text-3xl font-extrabold text-gray-900 mb-8">
             Kebijakan Privasi Reka Warisan
