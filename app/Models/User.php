@@ -6,16 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Filament\Panel;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * Mass assignable attributes.
      */
     protected $fillable = [
         'name',
@@ -28,13 +25,12 @@ class User extends Authenticatable
         'role',
         'xp',
         'level',
-        'badge_id',
+        'points',       // ✅ WAJIB! kamu pakai points di controller & badge
+        'badge_id',     // relasi badge
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
+     * Hidden attributes.
      */
     protected $hidden = [
         'password',
@@ -42,14 +38,13 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Cast attributes.
      */
     protected $casts = [
         'id' => 'integer',
         'xp' => 'integer',
         'level' => 'integer',
+        'points' => 'integer',      // ✅ WAJIB ADA
         'province' => 'integer',
         'regency' => 'integer',
         'district' => 'integer',
@@ -59,29 +54,26 @@ class User extends Authenticatable
         'role' => 'string',
     ];
 
+    /**
+     * Badge Relationship
+     */
     public function badge()
     {
-        return $this->belongsTo(Badge::class, 'badge_id');
+        return $this->belongsTo(\App\Models\Badge::class, 'badge_id');
     }
 
     /**
-     * Filament v3: menentukan siapa yang boleh akses panel.
+     * Check / auto update badge by points
      */
-    public function canAccessPanel(Panel $panel): bool
+    public function checkBadge()
     {
-        return $this->role === 'admin'; // Hanya admin bisa login ke Filament
-    }
+        $badge = \App\Models\Badge::where('points_requirement', '<=', $this->points)
+            ->orderBy('points_requirement', 'desc')
+            ->first();
 
-    /**
-     * Nama yg ditampilkan di Filament.
-     */
-    public function getFilamentName(): string
-    {
-        return $this->name ?? $this->username ?? 'Admin';
-    }
-
-    public function getUserName(): string
-    {
-        return (string) ($this->name ?: $this->username ?: 'Admin');
+        if ($badge && $this->badge_id != $badge->id) {
+            $this->badge_id = $badge->id;
+            $this->save();
+        }
     }
 }

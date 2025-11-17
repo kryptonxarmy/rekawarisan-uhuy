@@ -9,19 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('leaderboards', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->unsignedBigInteger('user_id'); 
-            $table->string('province'); 
-            $table->string('regency');
-            $table->integer('total_points');
-            $table->integer('rank');
+    $table->id();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->integer('points')->default(0);
+    $table->string('city')->nullable();
+    $table->string('province')->nullable();
+    $table->timestamps();
+});
 
-            // Langsung tambahkan timestamps di sini
-            $table->timestamps();
-
-            // Foreign key
-            $table->foreign('user_id')->references('id')->on('users');
-        });
     }
 
     public function down(): void
