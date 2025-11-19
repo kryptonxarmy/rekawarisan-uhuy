@@ -11,9 +11,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * Mass assignable attributes.
-     */
     protected $fillable = [
         'name',
         'username',
@@ -25,55 +22,44 @@ class User extends Authenticatable
         'role',
         'xp',
         'level',
-        'points',       // ✅ WAJIB! kamu pakai points di controller & badge
-        'badge_id',     // relasi badge
+        'points',
     ];
 
-    /**
-     * Hidden attributes.
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Cast attributes.
-     */
     protected $casts = [
         'id' => 'integer',
         'xp' => 'integer',
         'level' => 'integer',
-        'points' => 'integer',      // ✅ WAJIB ADA
+        'points' => 'integer',
         'province' => 'integer',
         'regency' => 'integer',
         'district' => 'integer',
-        'badge_id' => 'integer',
         'created_at' => 'datetime',
         'password' => 'hashed',
         'role' => 'string',
     ];
 
-    /**
-     * Badge Relationship
-     */
-    public function badge()
+    // many to many
+    public function badges()
     {
-        return $this->belongsTo(\App\Models\Badge::class, 'badge_id');
+        return $this->belongsToMany(Badge::class, 'user_badges');
     }
 
-    /**
-     * Check / auto update badge by points
-     */
+    // cek dan berikan badge otomatis
     public function checkBadge()
     {
-        $badge = \App\Models\Badge::where('points_requirement', '<=', $this->points)
-            ->orderBy('points_requirement', 'desc')
-            ->first();
+        $badges = Badge::orderBy('points_requirement')->get();
 
-        if ($badge && $this->badge_id != $badge->id) {
-            $this->badge_id = $badge->id;
-            $this->save();
+        foreach ($badges as $badge) {
+            if ($this->points >= $badge->points_requirement) {
+                if (!$this->badges()->where('badge_id', $badge->id)->exists()) {
+                    $this->badges()->attach($badge->id);
+                }
+            }
         }
     }
 }

@@ -34,7 +34,6 @@ class AuthenticatedSessionController extends Controller
          * AUTO ASSIGN DAILY MISSIONS AFTER LOGIN
          * ==========================================================
          */
-        app(\App\Http\Controllers\MissionController::class)->assignDailyMissions();
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

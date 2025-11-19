@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\JejakMaestroController;
-use App\Http\Controllers\MissionController;
+use App\Http\Controllers\JejakMaestroController; // Pastikan ini ada
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -11,69 +10,29 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('frontend.beranda');
-})->name('beranda');
+Route::get('/', function () { return view('frontend.beranda'); })->name('beranda');
+Route::get('/faq', function () { return view('frontend.page.faq'); })->name('faq');
+Route::get('/kebijakan-privasi', function () { return view('frontend.page.kebijakan'); })->name('kebijakan-privasi');
+Route::get('/contact', function () { return view('frontend.page.contact'); })->name('contact');
 
-Route::get('/faq', function () {
-    return view('frontend.page.faq');
-})->name('faq');
-
-Route::get('/kebijakan-privasi', function () {
-    return view('frontend.page.kebijakan');
-})->name('kebijakan-privasi');
-
-Route::get('/contact', function () {
-    return view('frontend.page.contact');
-})->name('contact');
-
-
-/*
-|--------------------------------------------------------------------------
-| Jejak Maestro + Daily Mission (HARUS LOGIN)
-|--------------------------------------------------------------------------
-*/
-
+// --- JEJAK MAESTRO (Hanya User Login) ---
 Route::middleware('auth')->group(function () {
 
-    // Halaman Jejak Maestro
-    Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])
-        ->name('jejakmaestro');
+    // Halaman Utama
+    Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])->name('jejakmaestro');
 
-    // Daily Mission actions
-    Route::post('/mission/complete/read', [MissionController::class, 'completeRead'])
-        ->name('mission.complete.read');
+    // Route Action Misi (SEMUA KE JejakMaestroController)
+    Route::post('/mission/complete/read', [JejakMaestroController::class, 'completeRead'])->name('mission.complete.read');
+    Route::post('/mission/complete/share', [JejakMaestroController::class, 'completeShare'])->name('mission.complete.share');
+    Route::post('/mission/complete/quiz', [JejakMaestroController::class, 'completeQuiz'])->name('mission.complete.quiz');
 
-    Route::post('/mission/complete/share', [MissionController::class, 'completeShare'])
-        ->name('mission.complete.share');
-
-    Route::post('/mission/complete/quiz', [MissionController::class, 'completeQuiz'])
-        ->name('mission.complete.quiz');
+    // --- ROUTE RESET DARURAT (HAPUS NANTI KALAU SUDAH LIVE) ---
+    // Akses ini sekali saja lewat browser untuk memperbaiki data "130 Poin"
+    Route::get('/reset-error-misi', [JejakMaestroController::class, 'resetMisiHariIni']);
 });
 
-
-/*
-|--------------------------------------------------------------------------
-| Error pages
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/200', fn () => view('frontend.errors.200'))->name('200');
-Route::get('/400', fn () => view('frontend.errors.400'))->name('400');
-Route::get('/404', fn () => view('frontend.errors.404'))->name('404');
-Route::get('/500', fn () => view('frontend.errors.500'))->name('500');
-
-
-/*
-|--------------------------------------------------------------------------
-| Dashboard & Profile
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+// --- DASHBOARD & PROFILE ---
+Route::get('/dashboard', function () { return view('dashboard'); })->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
