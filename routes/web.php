@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Listing Page - Homepage
 Route::get('/', function () {
     return view('frontend.beranda'); // pakai halaman beranda (pino)
 })->name('beranda');
@@ -36,6 +37,15 @@ Route::get('/jejak-maestro', function () {
     return view('frontend.jejakmaestro.index');
 })->name('jejakmaestro');
 
+// Pustaka Warisan
+Route::get('/pustaka-warisan', function () {
+    return view('frontend.pustakawarisan.index');
+})->name('pustakawarisan');
+
+route::get('/pustaka-warisan/detail', function () {
+    return view('frontend.pustakawarisan.detail');
+})->name('pustakawarisan.detail');
+
 // Error pages
 Route::get('/200', fn () => view('frontend.errors.200'))->name('200');
 Route::get('/400', fn () => view('frontend.errors.400'))->name('400');
@@ -57,5 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
 
 require __DIR__.'/auth.php';

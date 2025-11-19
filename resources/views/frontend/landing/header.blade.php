@@ -116,7 +116,7 @@
         </li>
 
         <li>
-          <a href="#" class="block py-2 px-3 md:p-0 transition-colors duration-200">
+          <a href="{{ route('pustakawarisan') }}" class="block py-2 px-3 md:p-0 transition-colors duration-200">
             Pustaka Warisan
           </a>
         </li>
