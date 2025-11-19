@@ -13,6 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Listing Page - Homepage
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('index');
+})->name('home');
+
+// Detail Page
+Route::get('/detail', function () {
+    return view('detail');
+})->name('detail');
+
+// Optional: Dynamic route for different articles
+Route::get('/detail/{slug}', function ($slug) {
+    return view('detail', ['slug' => $slug]);
+})->name('detail.show');
