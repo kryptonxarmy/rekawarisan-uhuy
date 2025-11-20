@@ -25,7 +25,7 @@
     @include('frontend.landing.footer')
     <!-- Footer End -->
 
-    @yield('scripts')
+    @stack('scripts')
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 </body>

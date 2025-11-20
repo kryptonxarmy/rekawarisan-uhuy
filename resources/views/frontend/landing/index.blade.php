@@ -1,5 +1,5 @@
 <!-- hero section -->
-<div class="min-h-[45vh] flex flex-col items-center justify-center text-center px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
+<div class="min-h-[45vh] 2xl:min-h-[25vh] flex flex-col items-center justify-center text-center px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
     <img src="{{ asset('assets/landing/logo-herosection.png') }}" alt="">
     <p class="text-white mt-1 p-4 text-l sm:text-xl max-w-screen-xl leading-relaxed">
         Jelajahi akademi literasi digital interaktif, hadapi tantangan 'Jejak Maestro', dan temukan cara baru berkreasi dari warisan Indonesia. Untuk seluruh pembelajar di Indonesia dan dunia.
@@ -174,7 +174,7 @@
             
             <!-- Enhanced Buttons -->
             <div class="flex gap-4">
-              <a href="#" class="flex-1 bg-gradient-to-r from-[#127E80] to-[#0F6B6E] hover:from-[#0F6B6E] hover:to-[#127E80] text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center transform hover:-translate-y-1 border border-white/20 group/btn">
+              <a href="#pustaka-warisan" class="flex-1 bg-gradient-to-r from-[#127E80] to-[#0F6B6E] hover:from-[#0F6B6E] hover:to-[#127E80] text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center transform hover:-translate-y-1 border border-white/20 group/btn">
                 <span class="flex items-center justify-center gap-2">
                   Selengkapnya
                   <svg class="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,7 +182,7 @@
                   </svg>
                 </span>
               </a>
-              <a href="#" class="bg-white/15 hover:bg-white/25 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 border border-white/30 text-center backdrop-blur-sm hover:shadow-lg transform hover:-translate-y-0.5">
+              <a href="{{ route('pustakawarisan') }}" class="bg-white/15 hover:bg-white/25 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 border border-white/30 text-center backdrop-blur-sm hover:shadow-lg transform hover:-translate-y-0.5">
                 Lihat
               </a>
             </div>
@@ -231,7 +231,7 @@
             
             <!-- Enhanced Buttons -->
             <div class="flex gap-4">
-              <a href="#" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-slate-900 font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center transform hover:-translate-y-1 border border-amber-300/50 group/btn">
+              <a href="#jejak-maestro" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-slate-900 font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-center transform hover:-translate-y-1 border border-amber-300/50 group/btn">
                 <span class="flex items-center justify-center gap-2">
                   Selengkapnya
                   <svg class="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,7 +239,7 @@
                   </svg>
                 </span>
               </a>
-              <a href="#" class="bg-white/15 hover:bg-white/25 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 border border-white/30 text-center backdrop-blur-sm hover:shadow-lg transform hover:-translate-y-0.5">
+              <a href="{{ route('jejakmaestro') }}" class="bg-white/15 hover:bg-white/25 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 border border-white/30 text-center backdrop-blur-sm hover:shadow-lg transform hover:-translate-y-0.5">
                 Lihat
               </a>
             </div>
@@ -410,7 +410,7 @@
 
   <div class="max-w-screen-xl mx-auto px-4 relative z-10">
     <!-- Pustaka Warisan -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
+    <div id="pustaka-warisan" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
 
         <!-- Header -->
         <div class="col-span-2 flex flex-col items-center justify-center text-center space-y-6">
@@ -463,7 +463,7 @@
 
         <!-- Pustaka Warisan Section - Updated Button -->
         <div class="flex gap-4 pt-4">
-            <a href="#" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center border border-amber-300/50">
+            <a href="{{ route('pustakawarisan') }}" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center border border-amber-300/50">
                 <span class="flex items-center justify-center gap-3 text-lg">
                     Jelajahi Koleksi
                     <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -476,7 +476,7 @@
     </div>
 
     <!-- Jejak Maestro -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <div id="jejak-maestro" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <!-- Header -->
         <div class="col-span-2 space-y-6 flex flex-col items-center justify-center text-center">
           <div class="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm text-white text-sm font-semibold px-6 py-3 rounded-full border border-white/20">
@@ -502,7 +502,7 @@
 
         <!-- CTA Buttons -->
         <div class="flex gap-4 pt-4">
-          <a href="#" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-slate-900 font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center">
+          <a href="{{ route('jejakmaestro') }}" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-slate-900 font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center">
             <span class="flex items-center justify-center gap-3 text-lg">
               Mulai Petualangan
               <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -510,7 +510,7 @@
               </svg>
             </span>
           </a>
-          <a href="#" class="bg-white/10 hover:bg-white/20 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 border border-white/20 text-center backdrop-blur-sm">
+          <a href="{{ route('jejakmaestro') }}" class="bg-white/10 hover:bg-white/20 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 border border-white/20 text-center backdrop-blur-sm">
             Lihat Peringkat
           </a>
         </div>

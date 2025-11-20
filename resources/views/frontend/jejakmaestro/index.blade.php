@@ -4,12 +4,25 @@
 <section class="bg-gray-50 min-h-screen pb-16 relative overflow-x-hidden">
 
     {{-- ================= HERO SECTION ================= --}}
-    <div class="rounded-xl min-h-[35vh] flex flex-col items-center justify-center text-center px-6 pt-20 mt-[-5rem]" 
-         style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;">
-        <div class="container mx-auto px-6 relative z-10 text-center">
-            <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[6rem] font-black tracking-tight text-yellow-400 drop-shadow-2xl leading-none">
-                Jejak Maestro
-            </h1>
+    <div 
+        style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); 
+                background-size: cover; 
+                background-repeat: no-repeat; 
+                background-position: center; 
+                background-blend-mode: overlay;">
+        
+        <div class="pt-24 pb-16 md:pt-32 md:pb-20 min-h-[30vh] md:min-h-[40vh] flex flex-col items-center justify-center relative z-10">
+            <div class="container mx-auto px-6 text-center">
+                
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl 
+                        font-extrabold tracking-tight 
+                        text-yellow-400 
+                        drop-shadow-lg leading-tight md:leading-none">
+                    Jejak Maestro
+                </h1>
+
+                
+            </div>
         </div>
     </div>
 
