@@ -45,8 +45,9 @@
                         </svg>
                     </div>
 
-                    <h2 class="text-2xl font-semibold mt-4">{{ Auth::user()->name }}</h2>
-                    <p class="text-teal-100">{{ Auth::user()->email }}</p>
+                    <h2 class="text-2xl font-semibold mt-4">{{ Auth::user()->name ?? 'Rifa Pino Dan Kawan' }}</h2>
+                    <p class="text-teal-100">{{ Auth::user()->email ?? 'pino@email.com' }}</p>
+                    <p class="text-teal-100 text-sm mt-1">{{ Auth::user()->username ?? 'joko_w' }}</p>
                 </div>
             </div>
 
@@ -55,7 +56,7 @@
 
                 {{-- INFORMASI PRIBADI --}}
                 <div>
-                    <h3 class="text-lg font-semibold text-teal-700 flex items-center gap-2 mb-3">
+                    <h3 class="text-lg font-semibold text-teal-700 flex items-center gap-2 mb-6">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.41 0-8 2.69-8 6v2h16v-2c0-3.31-3.59-6-8-6z">
@@ -64,9 +65,68 @@
                         Informasi Pribadi
                     </h3>
 
+                    {{-- Tampilkan Data Profil --}}
+                    <div class="bg-teal-50 p-6 rounded-lg shadow-sm mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Nama Lengkap</h4>
+                                <p class="text-gray-900">{{ Auth::user()->name ?? 'Rifa Pino Dan Kawan' }}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">No. HP</h4>
+                                <p class="text-gray-900">{{ Auth::user()->phone ?? '081234567890' }}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Email</h4>
+                                <p class="text-gray-900">{{ Auth::user()->email ?? 'pino@email.com' }}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Username</h4>
+                                <p class="text-gray-900">{{ Auth::user()->username ?? 'joko_w' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Form Update Profil --}}
-                    <div class="bg-teal-50 p-6 rounded-lg shadow-sm">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-teal-100">
                         @include('profile.partials.update-profile-information-form')
+                    </div>
+                </div>
+
+                {{-- INFORMASI LOKASI --}}
+                <div>
+                    <h3 class="text-lg font-semibold text-teal-700 flex items-center gap-2 mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Informasi Lokasi
+                    </h3>
+
+                    {{-- Tampilkan Data Lokasi --}}
+                    <div class="bg-teal-50 p-6 rounded-lg shadow-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Provinsi</h4>
+                                <p class="text-gray-900">{{ Auth::user()->province ?? 'Jawa Tengah' }}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Kota/Kabupaten</h4>
+                                <p class="text-gray-900">{{ Auth::user()->city ?? 'Solo' }}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Kecamatan</h4>
+                                <p class="text-gray-900">{{ Auth::user()->district ?? 'Banjarsari' }}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Desa/Kelurahan</h4>
+                                <p class="text-gray-900">{{ Auth::user()->village ?? 'Kadipiro' }}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="font-medium text-gray-700 mb-2">Alamat Lengkap</h4>
+                            <p class="text-gray-900">{{ Auth::user()->address ?? 'Desa Kadipiro, Kec. Banjarsari, Solo, Jawa Tengah' }}</p>
+                        </div>
                     </div>
                 </div>
 
@@ -105,10 +165,4 @@
 
             </div>
         </div>
-
-        {{-- Copyright --}}
-        <div class="text-center text-gray-400 mt-8 mb-4">
-            ©2025 Reka Warisan, All Rights Reserved
-        </div>
-    </div>
 </x-app-layout>

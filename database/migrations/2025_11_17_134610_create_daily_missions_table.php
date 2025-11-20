@@ -8,21 +8,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('daily_missions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');                 // WAJIB → tidak boleh null
-            $table->string('slug')->unique();        // WAJIB
-            $table->text('content')->nullable();     // optional
-            $table->unsignedBigInteger('user_id');   // penulis artikel
+            $table->unsignedBigInteger('user_id');
+            $table->boolean('read_done')->default(false);
+            $table->boolean('share_done')->default(false);
+            $table->boolean('quiz_done')->default(false);
+            $table->integer('points_today')->default(0);
             $table->timestamps();
 
-            // relasi
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('daily_missions');
     }
 };

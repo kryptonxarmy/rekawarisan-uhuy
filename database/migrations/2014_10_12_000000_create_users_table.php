@@ -12,21 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('name'); // Nama lengkap
-            $table->string('username')->unique(); // Username unik
-            $table->string('email')->unique(); // Email unik
-            $table->string('password'); // Password terenkripsi
-            $table->integer('province'); // Provinsi asal
-            $table->integer('regency'); // Kabupaten/Kota asal
-            $table->integer('district'); // Kecamatan asal
-            $table->enum('role', ['admin', 'enduser']); // Role pengguna
-            $table->integer('xp')->default(0); // Total XP pengguna
-            $table->integer('level')->default(1); // Level pengguna
-            $table->unsignedBigInteger('badge_id')->nullable(); // Badge yang sedang dimiliki
-            $table->timestamps(); // created_at & updated_at
+            $table->id(); 
+            $table->string('name'); 
+            $table->string('username')->unique(); 
+            $table->string('email')->unique(); 
+            $table->string('password'); 
+            
+            // --- BAGIAN INI YANG DIUBAH ---
+            // Ganti 'integer' menjadi 'string' agar bisa menyimpan Nama (huruf)
+            $table->string('province'); 
+            $table->string('regency'); 
+            $table->string('district'); 
+            // ------------------------------
 
-            // Foreign key
+            $table->enum('role', ['admin', 'enduser']); 
+            $table->integer('xp')->default(0); 
+            $table->integer('level')->default(1); 
+            $table->unsignedBigInteger('badge_id')->nullable(); 
+            $table->timestamps(); 
+
             $table->foreign('badge_id')->references('id')->on('badges');
         });
     }

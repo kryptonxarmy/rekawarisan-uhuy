@@ -29,6 +29,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        /**
+         * ==========================================================
+         * AUTO ASSIGN DAILY MISSIONS AFTER LOGIN
+         * ==========================================================
+         */
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

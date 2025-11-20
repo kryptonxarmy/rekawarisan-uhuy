@@ -12,12 +12,18 @@ class Badge extends Model
     protected $fillable = [
         'name',
         'description',
-        'level_requirement',
+        'image', // tambahkan image
+        'points_requirement',
     ];
 
     protected $casts = [
         'id' => 'integer',
-        'level_requirement' => 'integer',
+        'points_requirement' => 'integer',
         'created_at' => 'datetime',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_badges');
+    }
 }

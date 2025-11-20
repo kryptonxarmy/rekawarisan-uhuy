@@ -6,29 +6,48 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('missions', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('title'); // Nama misi
-            $table->text('description'); // Deskripsi misi
-            $table->enum('type', ['read', 'quiz']); // Jenis misi
-            $table->integer('xp_reward'); // XP reward setelah menyelesaikan semua artikel/quiz
-            $table->enum('status', ['draft', 'active', 'inactive', 'expired']); // Status misi
-            $table->unsignedBigInteger('created_by'); // Admin pembuat misi
-            $table->timestamps(); // created_at & updated_at
+            $table->id();
 
-            // Foreign key
-            $table->foreign('created_by')->references('id')->on('users');
+            // Judul misi
+            $table->string('title');
+
+            // Penjelasan misi
+            $table->text('description')->nullable();
+
+            // Poin yang didapat user
+            $table->integer('points')->default(0);
+
+            // Tipe misi:
+            // daily = misi harian
+            // weekly = mingguan
+            // special = event tertentu
+            $table->enum('type', ['daily', 'weekly', 'special'])->default('daily');
+
+            // Status misi (aktif atau tidak)
+            $table->boolean('is_active')->default(true);
+
+            // Tanggal misi berlaku (khusus misi harian yang admin update tiap hari)
+            $table->date('mission_date')->nullable();
+
+            // Icon misi
+            $table->string('icon')->nullable();
+
+            // Waktu mulai & akhir (jika digunakan)
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
+
+            // Relasi jika misi berhubungan dengan artikel/quiz
+            $table->unsignedBigInteger('related_id')->nullable();
+            $table->string('related_type')->nullable(); 
+            // contoh: Article, Quiz, Video → polymorphic
+
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('missions');
