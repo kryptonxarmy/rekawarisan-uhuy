@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\JejakMaestroController; // Penting: Pastikan Controller ini sudah ada file-nya
+use App\Http\Controllers\JejakMaestroController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,12 +43,16 @@ Route::get('/400', fn () => view('frontend.errors.400'))->name('400');
 Route::get('/404', fn () => view('frontend.errors.404'))->name('404');
 Route::get('/500', fn () => view('frontend.errors.500'))->name('500');
 
+// Halaman Utama Jejak Maestro - CUKUP DEKLARASI SATU KALI SAJA.
+// Controller kini akan menangani penentuan view (login/belum login).
+Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])->name('jejakmaestro');
+
+
 /*
 |--------------------------------------------------------------------------
 | Routes yang Membutuhkan Login (Middleware Auth)
 |--------------------------------------------------------------------------
 */
-
 Route::middleware(['auth', 'verified'])->group(function () {
     
     // --- DASHBOARD ---
@@ -59,9 +63,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // --- JEJAK MAESTRO LOGIC (Dari Temanmu) ---
     // Menggunakan Controller agar fungsi misi, share, dan kuis berjalan
     
-    // Halaman Utama Jejak Maestro
-    Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])->name('jejakmaestro');
-
     // Action Misi (Post ke Controller)
     Route::post('/mission/complete/read', [JejakMaestroController::class, 'completeRead'])->name('mission.complete.read');
     Route::post('/mission/complete/share', [JejakMaestroController::class, 'completeShare'])->name('mission.complete.share');

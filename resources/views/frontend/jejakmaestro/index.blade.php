@@ -137,7 +137,7 @@
                                 <span class="text-xs text-amber-600 font-bold">+10 Poin</span>
                             </div>
 
-                            @if ($dailyMission->read_done)
+                            @if ($dailyMission?->read_done)
                                 <p class="text-sm font-semibold text-green-600 mb-1">Misi Selesai</p>
                             @else
                                 <form method="POST" action="{{ route('mission.complete.read') }}">
@@ -148,7 +148,7 @@
                         </div>
                     </div>
                     <div class="text-right ml-2">
-                        @if ($dailyMission->read_done)
+                        @if ($dailyMission?->read_done)
                             <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-done.png') }}" alt="Done" class="w-16">
                         @else
                             <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-not-done.png') }}" alt="Not Done" class="w-16">
@@ -157,8 +157,8 @@
                 </div>
 
                 {{-- MISI 2: KUIS --}}
-                <div @if(!$dailyMission->quiz_done) id="open-quiz-modal" @endif 
-                     class="flex items-center bg-white p-4 rounded-xl border border-gray-300 shadow-md transition duration-300 {{ !$dailyMission->quiz_done ? 'cursor-pointer hover:shadow-lg hover:border-amber-300' : '' }}">
+                <div @if(!$dailyMission?->quiz_done) id="open-quiz-modal" @endif 
+                     class="flex items-center bg-white p-4 rounded-xl border border-gray-300 shadow-md transition duration-300 {{ !$dailyMission?->quiz_done ? 'cursor-pointer hover:shadow-lg hover:border-amber-300' : '' }}">
                     
                     <img src="{{ asset('assets/logo-rekawarisan.png') }}" alt="Logo" class="w-12 mr-4">
                     <div class="flex-grow">
@@ -169,7 +169,7 @@
                                 <span class="text-xs text-amber-600 font-bold">+40 Poin</span>
                             </div>
                             
-                            @if ($dailyMission->quiz_done)
+                            @if ($dailyMission?->quiz_done)
                                 <p class="text-sm font-semibold text-green-600 mb-1">Misi Selesai</p>
                             @else
                                 <p class="text-sm font-semibold text-red-500 mb-1 animate-pulse">Kerjakan Kuis</p>
@@ -177,7 +177,7 @@
                         </div>
                     </div>
                     <div class="text-right ml-2">
-                        @if ($dailyMission->quiz_done)
+                        @if ($dailyMission?->quiz_done)
                             <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-done.png') }}" alt="Done" class="w-16">
                         @else
                             <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-not-done.png') }}" alt="Not Done" class="w-16">
@@ -186,7 +186,7 @@
                 </div>
 
                 {{-- MISI 3: SHARE (BONUS) - TERBUKA JIKA MISI 1 & 2 SELESAI --}}
-                @if ($dailyMission->read_done && $dailyMission->quiz_done)
+                @if ($dailyMission?->read_done && $dailyMission?->quiz_done)
                     {{-- STATE: TERBUKA (AKTIF) --}}
                     <div class="flex items-center bg-white p-4 rounded-xl shadow-md transition hover:shadow-lg border-2 border-amber-200">
                         <img src="{{ asset('assets/logo-rekawarisan.png') }}" alt="Logo" class="w-12 mr-4">
@@ -199,7 +199,7 @@
                                 </div>
                                 
                                 {{-- LOGIC BUTTON SHARE (+100 POIN) --}}
-                                @if($dailyMission->share_done)
+                                @if($dailyMission?->share_done)
                                     <p class="text-sm font-semibold text-green-600 mb-1">Misi Selesai</p>
                                 @else
                                     <form method="POST" action="{{ route('mission.complete.share') }}">
@@ -211,7 +211,7 @@
                             </div>
                         </div>
                         <div class="text-right ml-2">
-                            @if($dailyMission->share_done)
+                            @if($dailyMission?->share_done)
                                 <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-done.png') }}" alt="Done" class="w-16">
                             @else
                                 <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-not-done.png') }}" alt="Not Done" class="w-16">
@@ -239,23 +239,23 @@
                 <div class="flex flex-wrap gap-4 justify-start items-center min-h-[100px]">
                     
                     {{-- Loop Badge User --}}
-@forelse ($user->badges ?? [] as $badge)
-    <div class="flex flex-col items-center animate-fade-in-up">
-        {{-- PERBAIKAN DI SINI: Hapus string path manual, gunakan langsung dari DB --}}
-        <img src="{{ asset($badge->image) }}" 
-             alt="{{ $badge->name }}" 
-             class="w-20 h-20 rounded-full shadow-lg border-2 border-yellow-500 hover:scale-110 transition-transform cursor-pointer"
-             title="{{ $badge->name }}">
-             
-        <span class="text-xs font-bold text-gray-600 mt-1">{{ $badge->name }}</span>
-    </div>
-@empty
-    {{-- Bagian empty tetap sama --}}
-    <div class="flex items-center text-gray-500 italic bg-gray-100 px-4 py-2 rounded-lg w-full">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        Belum memiliki badge. Selesaikan misi untuk raih 100, 150, & 200 Poin!
-    </div>
-@endforelse
+                    @forelse ($user->badges ?? [] as $badge)
+                        <div class="flex flex-col items-center animate-fade-in-up">
+                            {{-- PERBAIKAN DI SINI: Hapus string path manual, gunakan langsung dari DB --}}
+                            <img src="{{ asset($badge->image) }}" 
+                                alt="{{ $badge->name }}" 
+                                class="w-20 h-20 rounded-full shadow-lg border-2 border-yellow-500 hover:scale-110 transition-transform cursor-pointer"
+                                title="{{ $badge->name }}">
+                                
+                            <span class="text-xs font-bold text-gray-600 mt-1">{{ $badge->name }}</span>
+                        </div>
+                    @empty
+                        {{-- Bagian empty tetap sama --}}
+                        <div class="flex items-center text-gray-500 italic bg-gray-100 px-4 py-2 rounded-lg w-full">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Belum memiliki badge. Selesaikan misi untuk raih 100, 150, & 200 Poin!
+                        </div>
+                    @endforelse
 
                 </div>
             </div>
@@ -266,92 +266,128 @@
             <img src="{{ asset('assets/jejakmaestro/bapakbapak.png') }}" alt="Bapak Maestro" class="max-w-full h-auto drop-shadow-xl">
         </div>
 
-        {{-- ================= LEADERBOARD ================= --}}
-        <div class="col-span-6 md:col-span-3 lg:col-span-2 space-y-6">
-            <div class="bg-white p-6 rounded-3xl shadow-2xl border border-gray-200 space-y-4 h-full">
-                <h2 class="text-2xl font-extrabold text-[#145D63] text-center">Leaderboard Poin</h2>
-                
-                <div class="flex rounded-xl overflow-hidden shadow-lg bg-gray-100 p-1">
-                    <button id="tab-kota" onclick="showLeaderboard('kota')" class="tab-button flex-1 py-2 text-sm font-bold text-gray-700 hover:bg-gray-200 transition rounded-lg">Kota</button>
-                    <button id="tab-provinsi" onclick="showLeaderboard('provinsi')" class="tab-button flex-1 py-2 text-sm font-bold text-gray-700 hover:bg-gray-200 transition rounded-lg">Provinsi</button>
-                    <button id="tab-indonesia" onclick="showLeaderboard('indonesia')" class="tab-button flex-1 py-2 text-sm font-bold bg-[#389A92] text-white shadow-md rounded-lg">Indonesia</button>
-                </div>
+{{-- ================= LEADERBOARD ================= --}}
+<div class="col-span-6 md:col-span-3 lg:col-span-2 space-y-6">
+    <div class="bg-white p-6 rounded-3xl shadow-2xl border border-gray-100 space-y-4 h-full">
+        
+        {{-- ## Judul Leaderboard --}}
+        <h2 class="text-2xl font-extrabold text-teal-800 text-center flex items-center justify-center border-b pb-2">
+            <svg class="w-6 h-6 text-amber-500 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+            </svg>
+            Leaderboard Poin
+        </h2>
 
-                <div class="overflow-x-auto h-[400px] relative custom-scrollbar">
-                    {{-- TABLE INDONESIA --}}
-                    <div id="leaderboard-indonesia" class="leaderboard-content absolute inset-0 transition-opacity duration-300">
-                        <table class="min-w-full text-sm text-left text-gray-700">
-                            <thead class="sticky top-0 bg-white z-10">
-                                <tr class="text-xs uppercase font-bold text-[#2D7A74] border-b-2 border-gray-300">
-                                    <th class="py-2 px-2">No</th>
-                                    <th class="py-2 px-2">Nama</th>
-                                    <th class="py-2 px-2 text-right">Point</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($leaderboardIndonesia as $i => $userRow)
-                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition {{ $i == 0 ? 'bg-yellow-50 font-bold' : '' }}">
-                                    <td class="py-2 px-2">{{ $i + 1 }}</td>
-                                    <td class="py-2 px-2">{{ $userRow->name }}</td>
-                                    <td class="py-2 px-2 text-right {{ $i == 0 ? 'text-amber-600' : '' }}">{{ $userRow->points }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {{-- TABLE PROVINSI --}}
-                    <div id="leaderboard-provinsi" class="leaderboard-content absolute inset-0 transition-opacity duration-300 hidden">
-                        <table class="min-w-full text-sm text-left text-gray-700">
-                            <thead class="sticky top-0 bg-white z-10">
-                                <tr class="text-xs uppercase font-bold text-[#2D7A74] border-b-2 border-gray-300">
-                                    <th class="py-2 px-2">No</th>
-                                    <th class="py-2 px-2">Nama</th>
-                                    <th class="py-2 px-2 text-right">Point</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($leaderboardProvinsi as $i => $userRow)
-                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition {{ $i == 0 ? 'bg-green-50 font-bold' : '' }}">
-                                    <td class="py-2 px-2">{{ $i + 1 }}</td>
-                                    <td class="py-2 px-2">
-                                        {{ $userRow->name }}
-                                        <div class="text-[10px] text-gray-400">{{ $userRow->province ?? '-' }}</div>
-                                    </td>
-                                    <td class="py-2 px-2 text-right {{ $i == 0 ? 'text-green-600' : '' }}">{{ $userRow->points }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {{-- TABLE KOTA --}}
-                    <div id="leaderboard-kota" class="leaderboard-content absolute inset-0 transition-opacity duration-300 hidden">
-                        <table class="min-w-full text-sm text-left text-gray-700">
-                            <thead class="sticky top-0 bg-white z-10">
-                                <tr class="text-xs uppercase font-bold text-[#2D7A74] border-b-2 border-gray-300">
-                                    <th class="py-2 px-2">No</th>
-                                    <th class="py-2 px-2">Nama</th>
-                                    <th class="py-2 px-2 text-right">Point</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($leaderboardKota as $i => $userRow)
-                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition {{ $i == 0 ? 'bg-blue-50 font-bold' : '' }}">
-                                    <td class="py-2 px-2">{{ $i + 1 }}</td>
-                                    <td class="py-2 px-2">
-                                        {{ $userRow->name }}
-                                        <div class="text-[10px] text-gray-400">{{ $userRow->regency ?? '-' }}</div>
-                                    </td>
-                                    <td class="py-2 px-2 text-right {{ $i == 0 ? 'text-blue-600' : '' }}">{{ $userRow->points }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+        {{-- ## Tab Selector --}}
+        <div class="flex rounded-xl overflow-hidden shadow-inner bg-gray-100 p-1">
+            <button id="tab-kota" onclick="showLeaderboard('kota')" 
+                class="tab-button flex-1 py-2 text-sm font-bold text-gray-700 hover:text-teal-700 transition rounded-lg hover:bg-gray-200">
+                Kota
+            </button>
+            <button id="tab-provinsi" onclick="showLeaderboard('provinsi')" 
+                class="tab-button flex-1 py-2 text-sm font-bold text-gray-700 hover:text-teal-700 transition rounded-lg hover:bg-gray-200">
+                Provinsi
+            </button>
+            <button id="tab-indonesia" onclick="showLeaderboard('indonesia')" 
+                class="tab-button flex-1 py-2 text-sm font-bold bg-[#389A92] text-white shadow-md rounded-lg">
+                Indonesia
+            </button>
         </div>
+
+        {{-- ## Konten Leaderboard --}}
+        <div class="overflow-y-auto h-[400px] relative custom-scrollbar">
+
+            {{-- ================= INDONESIA ================= --}}
+            <div id="leaderboard-indonesia" class="leaderboard-content transition-opacity duration-300">
+                <table class="min-w-full text-sm text-left text-gray-700">
+                    <thead class="sticky top-0 bg-white shadow-sm z-10">
+                        <tr class="text-xs uppercase font-bold text-teal-700 border-b-2 border-teal-300">
+                            <th class="py-3 px-2">No</th>
+                            <th class="py-3 px-2">Nama</th>
+                            <th class="py-3 px-2 text-right">Point</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($leaderboardIndonesia as $i => $userRow)
+                        <tr class="border-b border-gray-100 hover:bg-teal-50 transition 
+                            {{ $i == 0 ? 'bg-amber-100 font-extrabold text-amber-800 shadow-md' : '' }}">
+                            <td class="py-3 px-2">
+                                @if ($i == 0) 🥇
+                                @elseif ($i == 1) 🥈
+                                @elseif ($i == 2) 🥉
+                                @else {{ $i + 1 }}
+                                @endif
+                            </td>
+                            <td class="py-3 px-2">{{ $userRow->name ?? 'N/A' }}</td>
+                            <td class="py-3 px-2 text-right text-base">
+                                {{ number_format($userRow->points, 0, ',', '.') }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- ================= PROVINSI ================= --}}
+            <div id="leaderboard-provinsi" class="leaderboard-content absolute inset-0 transition-opacity duration-300 hidden">
+                <table class="min-w-full text-sm text-left text-gray-700">
+                    <thead class="sticky top-0 bg-white shadow-sm z-10">
+                        <tr class="text-xs uppercase font-bold text-teal-700 border-b-2 border-teal-300">
+                            <th class="py-3 px-2">No</th>
+                            <th class="py-3 px-2">Nama</th>
+                            <th class="py-3 px-2 text-right">Point</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($leaderboardProvinsi as $i => $userRow)
+                        <tr class="border-b border-gray-100 hover:bg-teal-50 transition 
+                            {{ $i == 0 ? 'bg-green-100 font-extrabold text-green-800 shadow-md' : '' }}">
+                            <td class="py-3 px-2">{{ $i + 1 }}</td>
+                            <td class="py-3 px-2">
+                                {{ $userRow->name }}
+                                <div class="text-[10px] text-gray-400 mt-0.5">{{ $userRow->province ?? '-' }}</div>
+                            </td>
+                            <td class="py-3 px-2 text-right text-base">
+                                {{ number_format($userRow->points, 0, ',', '.') }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- ================= KOTA ================= --}}
+            <div id="leaderboard-kota" class="leaderboard-content absolute inset-0 transition-opacity duration-300 hidden">
+                <table class="min-w-full text-sm text-left text-gray-700">
+                    <thead class="sticky top-0 bg-white shadow-sm z-10">
+                        <tr class="text-xs uppercase font-bold text-teal-700 border-b-2 border-teal-300">
+                            <th class="py-3 px-2">No</th>
+                            <th class="py-3 px-2">Nama</th>
+                            <th class="py-3 px-2 text-right">Point</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($leaderboardKota as $i => $userRow)
+                        <tr class="border-b border-gray-100 hover:bg-teal-50 transition 
+                            {{ $i == 0 ? 'bg-blue-100 font-extrabold text-blue-800 shadow-md' : '' }}">
+                            <td class="py-3 px-2">{{ $i + 1 }}</td>
+                            <td class="py-3 px-2">
+                                {{ $userRow->name }}
+                                <div class="text-[10px] text-gray-400 mt-0.5">{{ $userRow->regency ?? '-' }}</div>
+                            </td>
+                            <td class="py-3 px-2 text-right text-base">
+                                {{ number_format($userRow->points, 0, ',', '.') }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
     </div>
 </section>
@@ -438,6 +474,10 @@
         if (closeModalBtn) closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
         if(modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
     });
+console.log("🔥 CHECK DATA DARI LARAVEL 🔥");
+console.log("province:", @json($province));
+console.log("regency:", @json($regency));
+console.log("User in Blade:", @json($user));
 </script>
 
 <style>

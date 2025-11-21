@@ -4,12 +4,25 @@
 <section class="bg-gray-50 min-h-screen pb-16">
 
     {{-- ================= HERO SECTION ================= --}}
-    <div class="rounded-xl min-h-[35vh] flex flex-col items-center justify-center text-center px-6 pt-20 mt-[-5rem]" 
-         style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;">
-        <div class="container mx-auto px-6 relative z-10 text-center">
-            <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[6rem] font-black tracking-tight text-yellow-400 drop-shadow-2xl leading-none">
-                Jejak Maestro
-            </h1>
+    <div 
+        style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); 
+                background-size: cover; 
+                background-repeat: no-repeat; 
+                background-position: center; 
+                background-blend-mode: overlay;">
+        
+        <div class="pt-24 pb-16 md:pt-32 md:pb-20 min-h-[30vh] md:min-h-[40vh] flex flex-col items-center justify-center relative z-10">
+            <div class="container mx-auto px-6 text-center">
+                
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl 
+                        font-extrabold tracking-tight 
+                        text-yellow-400 
+                        drop-shadow-lg leading-tight md:leading-none">
+                    Jejak Maestro
+                </h1>
+
+                
+            </div>
         </div>
     </div>
 
@@ -62,7 +75,7 @@
             <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-amber-400/10 to-transparent rounded-full blur-lg"></div>
             <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-[#389A92]/10 to-transparent rounded-full blur-md"></div>
             
-            <div class="space-y-6 relative z-10">
+            <div class="space-y-6 relative">
                 <div class="space-y-2">
                     <h2 class="text-3xl font-black text-[#145D63] leading-tight">
                         Hadiah Menanti Anda <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-yellow-500">!</span>
@@ -89,26 +102,50 @@
         </div>
         
         {{-- ================= KOLOM MISI HARIAN & FEATURE CARDS ================= --}}
-        <div class="col-span-6 md:col-span-3 lg:col-span-3 space-y-6">
+        <div class="col-span-6 md:col-span-3 lg:col-span-3 space-y-6 z-10">
             
-            {{-- [BARU] 3 Feature Cards (Tanpa Icon Bulat, Sesuai Request) --}}
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {{-- Card 1 --}}
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
-                    <h3 class="font-bold text-gray-800 mb-2">Baca Artikel</h3>
-                    <p class="text-xs text-gray-500 leading-relaxed">Pelajari budaya Nusantara melalui artikel menarik</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+                {{-- Card 1: Baca Artikel (Warna Aksen: Indigo) --}}
+                <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 text-center 
+                            transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-indigo-300">
+                    
+                    <div class="flex justify-center mb-3">
+                        <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.429 9.832 5 8 5c-3.866 0-7 3.344-7 7s3.134 7 7 7c1.832 0 2.832-.429 4-1.253m0-13C13.168 5.429 14.168 5 16 5c3.866 0 7 3.344 7 7s-3.134 7-7 7c-1.832 0-2.832-.429-4-1.253"></path>
+                        </svg>
+                    </div>
+                    
+                    <h3 class="font-extrabold text-xl text-indigo-700 mb-1">Baca Artikel</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Pelajari budaya Nusantara melalui artikel mendalam</p>
                 </div>
 
-                {{-- Card 2 --}}
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
-                    <h3 class="font-bold text-gray-800 mb-2">Selesaikan Kuis</h3>
-                    <p class="text-xs text-gray-500 leading-relaxed">Uji pengetahuan dengan kuis harian</p>
+                {{-- Card 2: Selesaikan Kuis (Warna Aksen: Teal) --}}
+                <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 text-center 
+                            transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-teal-300">
+                    
+                    <div class="flex justify-center mb-3">
+                        <svg class="w-8 h-8 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.691 5.176-1.4 9-6.1 9-11.691 0-1.015-.177-2.008-.507-2.944z"></path>
+                        </svg>
+                    </div>
+                    
+                    <h3 class="font-extrabold text-xl text-teal-700 mb-1">Selesaikan Kuis</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Uji pengetahuan dengan kuis interaktif harian</p>
                 </div>
 
-                {{-- Card 3 --}}
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
-                    <h3 class="font-bold text-gray-800 mb-2">Dapatkan Badge</h3>
-                    <p class="text-xs text-gray-500 leading-relaxed">Koleksi badge eksklusif dari pencapaian</p>
+                {{-- Card 3: Dapatkan Badge (Warna Aksen: Amber) --}}
+                <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 text-center 
+                            transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-amber-300">
+                    
+                    <div class="flex justify-center mb-3">
+                        <svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.152C11.385 1.761 12.015 1.761 12.351 2.152L15.659 6.01L20.444 6.377C20.89 6.41 21.056 7.017 20.738 7.31L17.078 10.749L18.17 15.424C18.27 15.86 17.828 16.208 17.437 16.007L12 13.56L6.563 16.007C6.172 16.208 5.73 15.86 5.83 15.424L6.922 10.749L3.262 7.31C2.944 7.017 3.11 6.41 3.556 6.377L8.341 6.01L11.649 2.152z"></path>
+                        </svg>
+                    </div>
+                    
+                    <h3 class="font-extrabold text-xl text-amber-700 mb-1">Dapatkan Badge</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Koleksi badge eksklusif dari pencapaian Anda</p>
                 </div>
             </div>
 
@@ -116,7 +153,7 @@
             <div class="relative rounded-3xl overflow-hidden min-h-[400px]">
                 
                 {{-- OVERLAY CARD LOGIN (Style Gambar 2) --}}
-                <div class="absolute inset-0 z-20 bg-gray-100/40 backdrop-blur-[3px] flex items-center justify-center p-4">
+                <div class="absolute inset-0 z-10 bg-gray-100/40 backdrop-blur-[3px] flex items-center justify-center p-4">
                     <div class="bg-white rounded-2xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.3)] p-8 w-full max-w-xs text-center border border-gray-100 transform transition hover:scale-105 duration-300">
                         
                         {{-- Gembok Icon Simple --}}
@@ -191,7 +228,7 @@
         <div class="col-span-6 md:col-span-3 lg:col-span-2 space-y-6 relative rounded-3xl overflow-hidden min-h-[500px]">
             
             {{-- OVERLAY CARD LOGIN (Style Gambar 1) --}}
-            <div class="absolute inset-0 z-20 bg-gray-100/40 backdrop-blur-[3px] flex items-center justify-center p-4">
+            <div class="absolute inset-0 z-10 bg-gray-100/40 backdrop-blur-[3px] flex items-center justify-center p-4">
                 <div class="bg-white rounded-2xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.3)] p-8 w-full max-w-xs text-center border border-gray-100 transform transition hover:scale-105 duration-300">
                     
                     {{-- Gembok Icon Simple --}}

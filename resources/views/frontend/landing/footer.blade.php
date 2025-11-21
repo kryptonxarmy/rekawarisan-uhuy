@@ -24,7 +24,7 @@
             <!-- Brand Section -->
             <div class="lg:col-span-1 space-y-6">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('assets/logo-rekawarisan-white.png') }}" alt="Logo Reka Warisan" class="w-16 h-16 drop-shadow-lg">
+                    <img src="{{ asset('assets/logo-rekawarisan-white.png') }}" alt="Logo Reka Warisan" class="w-16 drop-shadow-lg">
                 </div>
                 <p class="text-gray-200 text-sm leading-relaxed max-w-xs">
                     Jembatan Inovasi Warisan Budaya ke Ekonomi Digital Global. Platform terintegrasi untuk lisensi, kolaborasi, dan literasi digital warisan Nusantara.
