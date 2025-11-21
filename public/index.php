@@ -31,6 +31,24 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 |
 */
 
+// Polyfill mb_strimwidth on systems without mbstring so Termwind and other libs
+// that rely on it don't crash the web entry point. This is a temporary
+// safeguard — enabling the PHP `mbstring` extension is the proper fix.
+if (! function_exists('mb_strimwidth')) {
+    function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = 'UTF-8') {
+        if (function_exists('mb_substr') && function_exists('mb_strlen')) {
+            $substr = mb_substr($str, $start, $width, $encoding);
+            if (mb_strlen($str, $encoding) > $width) {
+                $substr .= $trimmarker;
+            }
+            return $substr;
+        }
+        $substr = substr($str, $start, $width);
+        if (strlen($str) > $width) $substr .= $trimmarker;
+        return $substr;
+    }
+}
+
 require __DIR__.'/../vendor/autoload.php';
 
 /*

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JejakMaestroController;
+use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,19 @@ Route::get('/pustaka-warisan', function () {
 Route::get('/pustaka-warisan/detail', function () {
     return view('frontend.pustakawarisan.detail');
 })->name('pustakawarisan.detail');
+
+// Articles (user submissions)
+Route::middleware(['auth', 'points:150'])->group(function () {
+    Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
+    Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
+
+    // WYSIWYG image upload endpoint (used by Trix)
+    Route::post('/articles/upload-image', [ArticleController::class, 'uploadImage'])
+        ->name('articles.upload_image');
+});
+
+// Public article view (placed after specific routes so '/articles/create' isn't captured as a slug)
+Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 
 // --- ERROR PAGES (Punyamu) ---
 Route::get('/200', fn () => view('frontend.errors.200'))->name('200');
