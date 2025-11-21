@@ -15,6 +15,23 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
+// Quick polyfill for mb_strimwidth when mbstring is not enabled.
+// This prevents Termwind / Artisan from failing on systems without mbstring.
+if (! function_exists('mb_strimwidth')) {
+    function mb_strimwidth($str, $start, $width, $trimmarker = '', $encoding = 'UTF-8') {
+        if (function_exists('mb_substr') && function_exists('mb_strlen')) {
+            $substr = mb_substr($str, $start, $width, $encoding);
+            if (mb_strlen($str, $encoding) > $width) {
+                $substr .= $trimmarker;
+            }
+            return $substr;
+        }
+        $substr = substr($str, $start, $width);
+        if (strlen($str) > $width) $substr .= $trimmarker;
+        return $substr;
+    }
+}
+
 require __DIR__.'/vendor/autoload.php';
 
 $app = require_once __DIR__.'/bootstrap/app.php';

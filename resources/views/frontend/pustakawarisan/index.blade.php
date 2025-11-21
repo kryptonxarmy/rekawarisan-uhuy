@@ -12,7 +12,20 @@
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
-        <h2 class="text-3xl font-bold text-gray-800 mb-6">Pustaka Warisan</h2>
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-3xl font-bold text-gray-800">Pustaka Warisan</h2>
+            <div>
+                @auth
+                    @if(auth()->user()->points >= 150)
+                        <a href="{{ route('articles.create') }}" class="inline-block px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700">Tulis Artikel</a>
+                    @else
+                        <span class="text-sm text-gray-600">Butuh <strong>150 poin</strong> untuk menulis. Anda punya: {{ auth()->user()->points ?? 0 }}</span>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" class="inline-block px-4 py-2 border border-teal-600 text-teal-600 rounded">Masuk untuk menulis</a>
+                @endauth
+            </div>
+        </div>
 
         <!-- Search and Filters -->
         <div class="flex flex-col md:flex-row gap-4 mb-8">
