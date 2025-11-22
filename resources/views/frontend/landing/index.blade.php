@@ -182,7 +182,7 @@
                   </svg>
                 </span>
               </a>
-              <a href="{{ route('pustakawarisan') }}" class="bg-white/15 hover:bg-white/25 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 border border-white/30 text-center backdrop-blur-sm hover:shadow-lg transform hover:-translate-y-0.5">
+              <a href="{{ route('pustakawarisan.index') }}" class="bg-white/15 hover:bg-white/25 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 border border-white/30 text-center backdrop-blur-sm hover:shadow-lg transform hover:-translate-y-0.5">
                 Lihat
               </a>
             </div>
@@ -463,7 +463,7 @@
 
         <!-- Pustaka Warisan Section - Updated Button -->
         <div class="flex gap-4 pt-4">
-            <a href="{{ route('pustakawarisan') }}" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center border border-amber-300/50">
+            <a href="{{ route('pustakawarisan.index') }}" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center border border-amber-300/50">
                 <span class="flex items-center justify-center gap-3 text-lg">
                     Jelajahi Koleksi
                     <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

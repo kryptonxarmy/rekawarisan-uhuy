@@ -116,8 +116,8 @@ $mobileItem = 'block py-3 px-4';
                 </li>
 
                 <li>
-                    <a href="{{ route('pustakawarisan') }}" 
-                        class="{{ $mobileItem }} md:p-0 {{ request()->routeIs('pustakawarisan') ? $activeLink : $defaultLink }}">
+                    <a href="{{ route('pustakawarisan.index') }}" 
+                        class="{{ $mobileItem }} md:p-0 {{ request()->routeIs('pustakawarisan.index') ? $activeLink : $defaultLink }}">
                         Pustaka Warisan
                     </a>
                 </li>

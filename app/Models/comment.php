@@ -33,13 +33,15 @@ class Comment extends Model
         'created_at' => 'datetime',
     ];
 
-    public function article()
-    {
-        return $this->belongsTo(Article::class, 'article_id');
-    }
+public function article()
+{
+    return $this->belongsTo(Article::class);
+}
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+
 }

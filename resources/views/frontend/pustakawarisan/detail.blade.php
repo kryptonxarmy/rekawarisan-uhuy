@@ -18,82 +18,43 @@
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
             <!-- Left Content -->
             <div class="lg:col-span-2">
                 <!-- Title Section -->
                 <div class="mb-6">
-                    <h1 class="text-4xl font-bold text-gray-900 mb-4">Tari saman - Budaya Suku Gayo Aceh</h1>
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $article->title }}</h1>
                     <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                        <span>Kategori: <span class="text-teal-600 font-semibold">Tarian</span></span>
-                        <span>Provinsi: <span class="text-teal-600 font-semibold">Aceh</span></span>
-                        <span>Ditulis Oleh: <span class="text-teal-600 font-semibold">Admin Reka Warisan</span></span>
-                        <span class="flex items-center">👁️ 10,263 Dilihat</span>
+                        <span>Kategori: <span class="text-teal-600 font-semibold">{{ $article->category->name }}</span></span>
+                        <span>Provinsi: <span class="text-teal-600 font-semibold">{{ $article->province ?? '-' }}</span></span>
+                        <span>Ditulis Oleh: <span class="text-teal-600 font-semibold">{{ $article->author->name ?? 'Admin' }}</span></span>
+                        <span class="flex items-center">👁️ {{ number_format($article->view_count) }} Dilihat</span>
                     </div>
                 </div>
 
                 <!-- Hero Image -->
                 <div class="mb-8">
-                    <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full rounded-lg shadow-md">
+                    <img src="{{ $article->img_url ? asset($article->img_url) : asset('images/default.jpg') }}" 
+                        alt="{{ $article->title }}" class="w-full rounded-lg shadow-md">
                 </div>
 
                 <!-- Content -->
                 <div class="bg-white rounded-lg shadow-md p-8 mb-8">
                     <div class="prose max-w-none">
-                        <p class="text-gray-700 mb-6">
-                            <strong>Tari Saman</strong> adalah tarian tradisional yang berasal dari Suku Gayo di Aceh, Indonesia. Tarian ini dikenal sebagai salah satu warisan budaya yang paling menakjubkan karena memadukan gerakan cepat, harmoni vokal, dan energi yang luar biasa. Tari Saman biasanya dibawakan oleh sekelompok penari laki-laki yang duduk berbaris dengan seragam tradisional Aceh, melakukan gerakan tangan yang rumit bersama tepuk tangan yang dikoordinasi dengan sempurna. Tarian ini bukan hanya tentang estetika fisik, tetapi juga membawa pesan moral dan keagamaan yang selaras dengan gerakan dan syair-syair yang ditampilkan.
-                        </p>
-
-                        <div class="bg-teal-50 border-l-4 border-teal-600 p-4 mb-6">
-                            <p class="text-teal-900 italic">"Memuat sebagai Tarian Serbu Tangan"</p>
-                        </div>
-
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Sejarah dan Makna</h2>
-                        <p class="text-gray-700 mb-6">
-                            Tari Saman didasarkan pada legenda Islami. Berawal dari masa Nabi Umar dan daya yang berkembang dari pemikiran tradisional Islam dalam masyarakat Aceh. Tarian ini dirancang untuk merayakan berbagai peristiwa penting, seperti kelahiran nabi Muhammad SAW, pernikahan tradisional, atau peristiwa-peristiwa lain yang relevan dengan kehidupan sosial dan religi masyarakat Gayo. Tari Saman tidak hanya dimaksudkan sebagai hiburan, tetapi juga sebagai bentuk dakwah atau penyampaian pesan Islam melalui gerakan dan lirik yang harmonis.
-                        </p>
-                        <p class="text-gray-700 mb-6">
-                            Pada tahun 2011, UNESCO menetapkan Tari Saman sebagai Warisan Budaya Takbenda yang Memerlukan Perlindungan Mendesak (List of Intangible Cultural Heritage in Need of Urgent Safeguarding).
-                        </p>
-
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Karakteristik Tarian</h2>
-                        <ul class="list-none space-y-3 mb-6">
-                            <li class="flex items-start">
-                                <span class="text-teal-600 mr-2">●</span>
-                                <span class="text-gray-700">Gerakan tangan yang cepat dan sinkronisasi</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-teal-600 mr-2">●</span>
-                                <span class="text-gray-700">Tepukan tangan yang menjadi iringan musik</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-teal-600 mr-2">●</span>
-                                <span class="text-gray-700">Syair dalam bahasa Gayo yang mengandung pesan moral</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-teal-600 mr-2">●</span>
-                                <span class="text-gray-700">Kostum tradisional seragam yang menjadi ciri khas penari</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-teal-600 mr-2">●</span>
-                                <span class="text-gray-700">Formasi duduk berbaris yang rapat</span>
-                            </li>
-                        </ul>
-
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Kostum Tradisional</h2>
-                        <p class="text-gray-700 mb-6">
-                            Penari Tari Saman mengenakan pakaian adat Aceh yang kental dari baju hitam dengan hiasan benang emas, warna di bagian dada dan lengan. Mereka juga mengenakan kain songket di bagian pinggang yang dikenakan dengan sangat anggun. Kostum ini mencerminkan identitas khas Suku Gayo sekaligus menampilkan kemegahan budaya Aceh. Para penari memakai kain saluang yang dihibur di sekitar kepala atau kepala yang dihias "sarapet", yang adalah simbol penghormatan terhadap adat Aceh tradisional sebagai motif khas Aceh.
-                        </p>
+                        {!! $article->content !!}
                     </div>
 
                     <!-- Social Actions -->
                     <div class="flex items-center gap-4 mt-8 pt-6 border-t">
-                        <button class="flex items-center gap-2 text-gray-600 hover:text-teal-600">
-                            <span>❤️</span>
-                            <span>Sukai</span>
-                        </button>
-                        <button class="flex items-center gap-2 text-gray-600 hover:text-teal-600">
-                            <span>↗️</span>
-                            <span>Komentar</span>
+                        <form action="{{ route('articles.like', $article->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="flex items-center gap-2 text-gray-600 hover:text-teal-600">
+                                ❤️ <span>{{ $article->like_count }}</span> Suka
+                            </button>
+                        </form>
+
+                        <button class="flex items-center gap-2 text-gray-600 hover:text-teal-600" onclick="document.getElementById('comment-form').scrollIntoView();">
+                            ↗️ Komentar <span>{{ $article->comments->count() }}</span>
                         </button>
                     </div>
                 </div>
@@ -102,66 +63,26 @@
                 <div class="bg-white rounded-lg shadow-md p-8 mb-8">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-2xl font-bold text-gray-900">Komentar</h3>
-                        <button class="text-teal-600 hover:text-teal-700 font-semibold">+ Tambahkan Komentar</button>
+                        <button class="text-teal-600 hover:text-teal-700 font-semibold" onclick="document.getElementById('comment-form').scrollIntoView();">+ Tambahkan Komentar</button>
                     </div>
 
-                    <!-- Comment Item -->
+                    <!-- Comment Form -->
+                <form id="comment-form" action="{{ route('articles.comment', $article->id) }}" method="POST">
+                    @csrf
+                    <textarea name="comment_content" rows="3" placeholder="Tulis komentar..."></textarea>
+                    <button type="submit">Kirim Komentar</button>
+                </form>
+
+
+                    <!-- Comment Items -->
                     <div class="space-y-6">
-                        <div class="border-b pb-6">
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <span class="font-bold text-gray-900">Rina Safitri</span>
-                                        <span class="text-gray-500 text-sm">7 hari yang lalu</span>
-                                    </div>
-                                    <p class="text-gray-700 mb-2">Tari Saman sangat memukau! Saya jadi lebih besar lagi dengan kesenian Aceh dan bawaan luar biasa, termasuk yang karyanya ada model yang terdampat dengan tradisinya!</p>
-                                    <button class="text-teal-600 hover:text-teal-700 text-sm">❤️ 11</button>
-                                </div>
+                        @foreach($article->comments as $comment)
+                            <div>
+                                <strong>{{ $comment->user->name }}</strong>:
+                                <p>{{ $comment->content }}</p>
+                                <small>{{ $comment->created_at->diffForHumans() }}</small>
                             </div>
-                        </div>
-
-                        <div class="border-b pb-6">
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <span class="font-bold text-gray-900">Ahmad Rizki</span>
-                                        <span class="text-gray-500 text-sm">2 hari yang lalu</span>
-                                    </div>
-                                    <p class="text-gray-700 mb-2">Warisan budaya yang harus kita lestarikan. Tarian Kami tradisi terbaik daramaah Indonesia termasuk tari Saman ini.</p>
-                                    <button class="text-teal-600 hover:text-teal-700 text-sm">❤️ 8</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="border-b pb-6">
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <span class="font-bold text-gray-900">Siti Nurhaliza</span>
-                                        <span class="text-gray-500 text-sm">5 hari yang lalu</span>
-                                    </div>
-                                    <p class="text-gray-700 mb-2">Sangat bangga dengan budaya Aceh! Tari Saman adalah salah satu tarian tradisional yang paling terkenal di Indonesia.</p>
-                                    <button class="text-teal-600 hover:text-teal-700 text-sm">❤️ 14</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pb-6">
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <span class="font-bold text-gray-900">Budi Santoso</span>
-                                        <span class="text-gray-500 text-sm">3 hari yang lalu</span>
-                                    </div>
-                                    <p class="text-gray-700 mb-2">Artikel yang sangat informatif! Semakin lebih memahami sejarah dan makna di balik Tari Saman.</p>
-                                    <button class="text-teal-600 hover:text-teal-700 text-sm">❤️ 9</button>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
 
@@ -169,102 +90,91 @@
                 <div class="mb-8">
                     <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Artikel Budaya Terkait</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                            <div class="relative h-32">
-                                <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                                <span class="absolute top-2 left-2 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-semibold">Tarian</span>
-                            </div>
-                            <div class="p-3">
-                                <h4 class="font-bold text-gray-800 text-sm mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                                <p class="text-gray-600 text-xs mb-3">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                                <button class="text-teal-600 text-xs font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                            </div>
-                        </a>
-                        <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                            <div class="relative h-32">
-                                <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                                <span class="absolute top-2 left-2 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-semibold">Tarian</span>
-                            </div>
-                            <div class="p-3">
-                                <h4 class="font-bold text-gray-800 text-sm mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                                <p class="text-gray-600 text-xs mb-3">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                                <button class="text-teal-600 text-xs font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                            </div>
-                        </a>
-                        <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                            <div class="relative h-32">
-                                <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                                <span class="absolute top-2 left-2 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-semibold">Tarian</span>
-                            </div>
-                            <div class="p-3">
-                                <h4 class="font-bold text-gray-800 text-sm mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                                <p class="text-gray-600 text-xs mb-3">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                                <button class="text-teal-600 text-xs font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                            </div>
-                        </a>
-                        <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                            <div class="relative h-32">
-                                <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                                <span class="absolute top-2 left-2 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-semibold">Tarian</span>
-                            </div>
-                            <div class="p-3">
-                                <h4 class="font-bold text-gray-800 text-sm mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                                <p class="text-gray-600 text-xs mb-3">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                                <button class="text-teal-600 text-xs font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                            </div>
-                        </a>
+                        @foreach($relatedArticles as $rel)
+                            <a href="{{ route('pustakawarisan.show', $rel->id) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                                <div class="relative h-32">
+                                    <img src="{{ $rel->img_url ? asset($rel->img_url) : asset('images/default.jpg') }}" 
+                                        alt="{{ $rel->title }}" class="w-full h-full object-cover">
+                                    <span class="absolute top-2 left-2 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-semibold">
+                                        {{ $rel->category->name }}
+                                    </span>
+                                </div>
+                                <div class="p-3">
+                                    <h4 class="font-bold text-gray-800 text-sm mb-2">{{ $rel->title }}</h4>
+                                    <p class="text-gray-600 text-xs mb-3">{{ Str::limit(strip_tags($rel->content), 60) }}</p>
+                                    <button class="text-teal-600 text-xs font-semibold hover:text-teal-700">Baca Selengkapnya</button>
+                                </div>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
             </div>
 
             <!-- Right Sidebar -->
             <div class="lg:col-span-1">
-                <div class="bg-teal-700 text-white rounded-lg shadow-lg p-6 sticky top-4">
-                    <h3 class="text-2xl font-bold mb-6">Fakta Cepat</h3>
-                    
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="font-bold mb-2">Tari Saman</h4>
-                            <p class="text-sm text-teal-50">Tarian</p>
-                        </div>
+<div class="bg-teal-700 text-white rounded-lg shadow-lg p-6 sticky top-4 space-y-6">
 
-                        <div>
-                            <h4 class="font-bold mb-2">Budaya Gayo, Aceh</h4>
-                            <p class="text-sm text-teal-50">Asal</p>
-                        </div>
+    <!-- Fun Fact -->
+    <div>
+        <h3 class="text-2xl font-bold mb-4">Fun Fact</h3>
+        <div class="space-y-3">
+            <div>
+                <h4 class="font-bold mb-1">🕺 Tari Saman</h4>
+                <p class="text-sm text-teal-50">Tari Saman dilakukan tanpa alat musik, hanya suara dan gerakan tubuh.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-1">🌏 Bahasa Aceh</h4>
+                <p class="text-sm text-teal-50">Bahasa Aceh memiliki lebih dari 7 dialek yang berbeda tergantung daerahnya.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-1">🎉 Festival Budaya</h4>
+                <p class="text-sm text-teal-50">Beberapa festival diadakan tiap tahun untuk melestarikan tarian dan musik tradisional.</p>
+            </div>
+        </div>
+    </div>
 
-                        <div>
-                            <h4 class="font-bold mb-2">Syeikh Saman</h4>
-                            <p class="text-sm text-teal-50">Pencetus</p>
-                        </div>
+    <!-- Artikel Terkait -->
+    <div>
+        <h3 class="text-2xl font-bold mb-4">Artikel Terkait</h3>
+        <div class="space-y-2 text-sm">
+            @foreach($relatedArticles as $rel)
+                <a href="{{ route('pustakawarisan.show', $rel->id) }}" class="block hover:text-teal-200 bg-white text-gray-900 rounded-lg shadow-lg p-6">
+                    {{ Str::limit($rel->title, 40) }}
+                </a>
+            @endforeach
+        </div>
+    </div>
 
-                        <div>
-                            <h4 class="font-bold mb-2">Abad ke-14</h4>
-                            <p class="text-sm text-teal-50">Periode</p>
-                        </div>
+    <!-- Bagian Share di bawah artikel -->
+    <div class="mt-8 flex items-center gap-4">
+        <span class="font-semibold text-gray-700">Bagikan Artikel:</span>
 
-                        <div>
-                            <h4 class="font-bold mb-2">Status UNESCO: 2011 (Warisan Budaya Takbenda yang Memerlukan Perlindungan Mendesak)</h4>
-                            <p class="text-sm text-teal-50">Pengakuan Internasional</p>
-                        </div>
+        <!-- WhatsApp -->
+        <a href="https://api.whatsapp.com/send?text={{ urlencode($article->title . ' ' . request()->fullUrl()) }}" 
+        target="_blank" 
+        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.52 3.48A11.88 11.88 0 0012 0C5.37 0 .03 5.33.03 12c0 2.12.55 4.14 1.6 5.92L0 24l6.34-1.63A11.88 11.88 0 0012 24c6.63 0 12-5.33 12-12a11.88 11.88 0 00-3.48-8.52zM12 22c-1.85 0-3.63-.5-5.16-1.44l-.37-.22-3.77.97.94-3.66-.24-.38A9.94 9.94 0 012 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.2-7.1c-.28-.14-1.66-.82-1.92-.91-.26-.09-.45-.14-.64.14s-.73.91-.9 1.1-.33.21-.61.07a8.54 8.54 0 01-2.52-1.55 9.16 9.16 0 01-1.68-2.08c-.18-.31 0-.48.13-.63.14-.14.31-.33.46-.5.15-.17.2-.28.3-.47.1-.18.05-.33-.02-.47-.07-.14-.64-1.54-.88-2.11-.23-.55-.46-.47-.64-.48l-.54-.01c-.18 0-.47.07-.72.33s-.95.92-.95 2.24 1 2.6 1.13 2.78c.14.18 1.95 2.98 4.72 4.17.66.28 1.18.45 1.58.58.66.22 1.26.19 1.73.12.53-.08 1.66-.68 1.9-1.34.23-.65.23-1.2.16-1.32-.07-.11-.26-.18-.54-.32z"/>
+            </svg>
+            WhatsApp
+        </a>
 
-                        <div>
-                            <h4 class="font-bold mb-2">Keseniman dan Tarian</h4>
-                            <p class="text-sm text-teal-50">Kategori</p>
-                        </div>
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/?url={{ urlencode(request()->fullUrl()) }}" 
+        target="_blank" 
+        class="flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.16c3.2 0 3.584.012 4.85.07 1.17.054 1.95.24 2.41.406a4.92 4.92 0 011.8 1.03 4.92 4.92 0 011.03 1.8c.166.462.352 1.24.406 2.41.058 1.266.07 1.65.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.95-.406 2.41a4.92 4.92 0 01-1.03 1.8 4.92 4.92 0 01-1.8 1.03c-.462.166-1.24.352-2.41.406-1.266.058-1.65.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.95-.24-2.41-.406a4.92 4.92 0 01-1.8-1.03 4.92 4.92 0 01-1.03-1.8c-.166-.462-.352-1.24-.406-2.41C2.172 15.584 2.16 15.2 2.16 12s.012-3.584.07-4.85c.054-1.17.24-1.95.406-2.41a4.92 4.92 0 011.03-1.8 4.92 4.92 0 011.8-1.03c.462-.166 1.24-.352 2.41-.406C8.416 2.172 8.8 2.16 12 2.16zm0-2.16C8.737 0 8.332.012 7.052.07 5.775.127 4.842.308 4.052.558a6.873 6.873 0 00-2.49 1.622A6.873 6.873 0 00.558 4.052C.308 4.842.127 5.775.07 7.052.012 8.332 0 8.737 0 12c0 3.263.012 3.668.07 4.948.057 1.277.238 2.21.488 3a6.873 6.873 0 001.622 2.49 6.873 6.873 0 002.49 1.622c.79.25 1.723.431 3 .488C8.332 23.988 8.737 24 12 24s3.668-.012 4.948-.07c1.277-.057 2.21-.238 3-.488a6.873 6.873 0 002.49-1.622 6.873 6.873 0 001.622-2.49c.25-.79.431-1.723.488-3 .058-1.28.07-1.685.07-4.948s-.012-3.668-.07-4.948c-.057-1.277-.238-2.21-.488-3a6.873 6.873 0 00-1.622-2.49 6.873 6.873 0 00-2.49-1.622c-.79-.25-1.723-.431-3-.488C15.668.012 15.263 0 12 0z"/>
+                <path d="M12 5.838A6.162 6.162 0 105.838 12 6.162 6.162 0 0012 5.838zm0 10.162A4 4 0 1116 12a4 4 0 01-4 4zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/>
+            </svg>
+            Instagram
+        </a>
+    </div>
 
-                        <div>
-                            <h4 class="font-bold mb-2">Acara adat, perayaan</h4>
-                            <p class="text-sm text-teal-50">Penggunaan</p>
-                        </div>
-                    </div>
+</div>
 
-                    <div class="mt-8 pt-6 border-t border-teal-600">
-                        <button class="w-full bg-white text-teal-700 py-3 rounded-lg font-bold hover:bg-teal-50 transition-colors">
-                            Lihat Tata Website
-                        </button>
-                    </div>
-                </div>
+
+
             </div>
         </div>
     </div>
