@@ -9,20 +9,24 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('questions', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->text('question'); // Pertanyaan
-            $table->string('correct_answer'); // Jawaban benar
-            $table->timestamp('created_at'); // Waktu dibuat
+            $table->id();
+            $table->string('question');
+            $table->string('option_a');
+            $table->string('option_b');
+            $table->string('option_c')->nullable();
+            $table->string('option_d')->nullable();
+            $table->enum('correct', ['A', 'B', 'C', 'D']);
+            $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('questions');
     }
