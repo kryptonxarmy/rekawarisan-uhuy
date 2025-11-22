@@ -16,7 +16,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-24">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             <!-- Left Content -->
@@ -112,66 +112,66 @@
 
             <!-- Right Sidebar -->
             <div class="lg:col-span-1">
-<div class="bg-teal-700 text-white rounded-lg shadow-lg p-6 sticky top-4 space-y-6">
+                <div class="bg-teal-700 text-white rounded-lg shadow-lg p-6 sticky top-4 space-y-6">
 
-    <!-- Fun Fact -->
-    <div>
-        <h3 class="text-2xl font-bold mb-4">Fun Fact</h3>
-        <div class="space-y-3">
-            <div>
-                <h4 class="font-bold mb-1">🕺 Tari Saman</h4>
-                <p class="text-sm text-teal-50">Tari Saman dilakukan tanpa alat musik, hanya suara dan gerakan tubuh.</p>
-            </div>
-            <div>
-                <h4 class="font-bold mb-1">🌏 Bahasa Aceh</h4>
-                <p class="text-sm text-teal-50">Bahasa Aceh memiliki lebih dari 7 dialek yang berbeda tergantung daerahnya.</p>
-            </div>
-            <div>
-                <h4 class="font-bold mb-1">🎉 Festival Budaya</h4>
-                <p class="text-sm text-teal-50">Beberapa festival diadakan tiap tahun untuk melestarikan tarian dan musik tradisional.</p>
-            </div>
-        </div>
-    </div>
+                    <!-- Fun Fact -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Fun Fact</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <h4 class="font-bold mb-1">🕺 Tari Saman</h4>
+                                <p class="text-sm text-teal-50">Tari Saman dilakukan tanpa alat musik, hanya suara dan gerakan tubuh.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">🌏 Bahasa Aceh</h4>
+                                <p class="text-sm text-teal-50">Bahasa Aceh memiliki lebih dari 7 dialek yang berbeda tergantung daerahnya.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">🎉 Festival Budaya</h4>
+                                <p class="text-sm text-teal-50">Beberapa festival diadakan tiap tahun untuk melestarikan tarian dan musik tradisional.</p>
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- Artikel Terkait -->
-    <div>
-        <h3 class="text-2xl font-bold mb-4">Artikel Terkait</h3>
-        <div class="space-y-2 text-sm">
-            @foreach($relatedArticles as $rel)
-                <a href="{{ route('pustakawarisan.show', $rel->id) }}" class="block hover:text-teal-200 bg-white text-gray-900 rounded-lg shadow-lg p-6">
-                    {{ Str::limit($rel->title, 40) }}
-                </a>
-            @endforeach
-        </div>
-    </div>
+                    <!-- Artikel Terkait -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Artikel Terkait</h3>
+                        <div class="space-y-2 text-sm">
+                            @foreach($relatedArticles as $rel)
+                                <a href="{{ route('pustakawarisan.show', $rel->id) }}" class="block hover:text-teal-200 bg-white text-gray-900 rounded-lg shadow-lg p-6">
+                                    {{ Str::limit($rel->title, 40) }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
 
-    <!-- Bagian Share di bawah artikel -->
-    <div class="mt-8 flex items-center gap-4">
-        <span class="font-semibold text-gray-700">Bagikan Artikel:</span>
+                    <!-- Bagian Share di bawah artikel -->
+                    <div class="mt-8 flex items-center gap-4">
+                        <span class="font-semibold text-gray-100">Bagikan Artikel:</span>
 
-        <!-- WhatsApp -->
-        <a href="https://api.whatsapp.com/send?text={{ urlencode($article->title . ' ' . request()->fullUrl()) }}" 
-        target="_blank" 
-        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20.52 3.48A11.88 11.88 0 0012 0C5.37 0 .03 5.33.03 12c0 2.12.55 4.14 1.6 5.92L0 24l6.34-1.63A11.88 11.88 0 0012 24c6.63 0 12-5.33 12-12a11.88 11.88 0 00-3.48-8.52zM12 22c-1.85 0-3.63-.5-5.16-1.44l-.37-.22-3.77.97.94-3.66-.24-.38A9.94 9.94 0 012 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.2-7.1c-.28-.14-1.66-.82-1.92-.91-.26-.09-.45-.14-.64.14s-.73.91-.9 1.1-.33.21-.61.07a8.54 8.54 0 01-2.52-1.55 9.16 9.16 0 01-1.68-2.08c-.18-.31 0-.48.13-.63.14-.14.31-.33.46-.5.15-.17.2-.28.3-.47.1-.18.05-.33-.02-.47-.07-.14-.64-1.54-.88-2.11-.23-.55-.46-.47-.64-.48l-.54-.01c-.18 0-.47.07-.72.33s-.95.92-.95 2.24 1 2.6 1.13 2.78c.14.18 1.95 2.98 4.72 4.17.66.28 1.18.45 1.58.58.66.22 1.26.19 1.73.12.53-.08 1.66-.68 1.9-1.34.23-.65.23-1.2.16-1.32-.07-.11-.26-.18-.54-.32z"/>
-            </svg>
-            WhatsApp
-        </a>
+                        <!-- WhatsApp -->
+                        <a href="https://api.whatsapp.com/send?text={{ urlencode($article->title . ' ' . request()->fullUrl()) }}" 
+                        target="_blank" 
+                        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.52 3.48A11.88 11.88 0 0012 0C5.37 0 .03 5.33.03 12c0 2.12.55 4.14 1.6 5.92L0 24l6.34-1.63A11.88 11.88 0 0012 24c6.63 0 12-5.33 12-12a11.88 11.88 0 00-3.48-8.52zM12 22c-1.85 0-3.63-.5-5.16-1.44l-.37-.22-3.77.97.94-3.66-.24-.38A9.94 9.94 0 012 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.2-7.1c-.28-.14-1.66-.82-1.92-.91-.26-.09-.45-.14-.64.14s-.73.91-.9 1.1-.33.21-.61.07a8.54 8.54 0 01-2.52-1.55 9.16 9.16 0 01-1.68-2.08c-.18-.31 0-.48.13-.63.14-.14.31-.33.46-.5.15-.17.2-.28.3-.47.1-.18.05-.33-.02-.47-.07-.14-.64-1.54-.88-2.11-.23-.55-.46-.47-.64-.48l-.54-.01c-.18 0-.47.07-.72.33s-.95.92-.95 2.24 1 2.6 1.13 2.78c.14.18 1.95 2.98 4.72 4.17.66.28 1.18.45 1.58.58.66.22 1.26.19 1.73.12.53-.08 1.66-.68 1.9-1.34.23-.65.23-1.2.16-1.32-.07-.11-.26-.18-.54-.32z"/>
+                            </svg>
+                            WhatsApp
+                        </a>
 
-        <!-- Instagram -->
-        <a href="https://www.instagram.com/?url={{ urlencode(request()->fullUrl()) }}" 
-        target="_blank" 
-        class="flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.16c3.2 0 3.584.012 4.85.07 1.17.054 1.95.24 2.41.406a4.92 4.92 0 011.8 1.03 4.92 4.92 0 011.03 1.8c.166.462.352 1.24.406 2.41.058 1.266.07 1.65.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.95-.406 2.41a4.92 4.92 0 01-1.03 1.8 4.92 4.92 0 01-1.8 1.03c-.462.166-1.24.352-2.41.406-1.266.058-1.65.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.95-.24-2.41-.406a4.92 4.92 0 01-1.8-1.03 4.92 4.92 0 01-1.03-1.8c-.166-.462-.352-1.24-.406-2.41C2.172 15.584 2.16 15.2 2.16 12s.012-3.584.07-4.85c.054-1.17.24-1.95.406-2.41a4.92 4.92 0 011.03-1.8 4.92 4.92 0 011.8-1.03c.462-.166 1.24-.352 2.41-.406C8.416 2.172 8.8 2.16 12 2.16zm0-2.16C8.737 0 8.332.012 7.052.07 5.775.127 4.842.308 4.052.558a6.873 6.873 0 00-2.49 1.622A6.873 6.873 0 00.558 4.052C.308 4.842.127 5.775.07 7.052.012 8.332 0 8.737 0 12c0 3.263.012 3.668.07 4.948.057 1.277.238 2.21.488 3a6.873 6.873 0 001.622 2.49 6.873 6.873 0 002.49 1.622c.79.25 1.723.431 3 .488C8.332 23.988 8.737 24 12 24s3.668-.012 4.948-.07c1.277-.057 2.21-.238 3-.488a6.873 6.873 0 002.49-1.622 6.873 6.873 0 001.622-2.49c.25-.79.431-1.723.488-3 .058-1.28.07-1.685.07-4.948s-.012-3.668-.07-4.948c-.057-1.277-.238-2.21-.488-3a6.873 6.873 0 00-1.622-2.49 6.873 6.873 0 00-2.49-1.622c-.79-.25-1.723-.431-3-.488C15.668.012 15.263 0 12 0z"/>
-                <path d="M12 5.838A6.162 6.162 0 105.838 12 6.162 6.162 0 0012 5.838zm0 10.162A4 4 0 1116 12a4 4 0 01-4 4zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/>
-            </svg>
-            Instagram
-        </a>
-    </div>
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/?url={{ urlencode(request()->fullUrl()) }}" 
+                        target="_blank" 
+                        class="flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.16c3.2 0 3.584.012 4.85.07 1.17.054 1.95.24 2.41.406a4.92 4.92 0 011.8 1.03 4.92 4.92 0 011.03 1.8c.166.462.352 1.24.406 2.41.058 1.266.07 1.65.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.95-.406 2.41a4.92 4.92 0 01-1.03 1.8 4.92 4.92 0 01-1.8 1.03c-.462.166-1.24.352-2.41.406-1.266.058-1.65.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.95-.24-2.41-.406a4.92 4.92 0 01-1.8-1.03 4.92 4.92 0 01-1.03-1.8c-.166-.462-.352-1.24-.406-2.41C2.172 15.584 2.16 15.2 2.16 12s.012-3.584.07-4.85c.054-1.17.24-1.95.406-2.41a4.92 4.92 0 011.03-1.8 4.92 4.92 0 011.8-1.03c.462-.166 1.24-.352 2.41-.406C8.416 2.172 8.8 2.16 12 2.16zm0-2.16C8.737 0 8.332.012 7.052.07 5.775.127 4.842.308 4.052.558a6.873 6.873 0 00-2.49 1.622A6.873 6.873 0 00.558 4.052C.308 4.842.127 5.775.07 7.052.012 8.332 0 8.737 0 12c0 3.263.012 3.668.07 4.948.057 1.277.238 2.21.488 3a6.873 6.873 0 001.622 2.49 6.873 6.873 0 002.49 1.622c.79.25 1.723.431 3 .488C8.332 23.988 8.737 24 12 24s3.668-.012 4.948-.07c1.277-.057 2.21-.238 3-.488a6.873 6.873 0 002.49-1.622 6.873 6.873 0 001.622-2.49c.25-.79.431-1.723.488-3 .058-1.28.07-1.685.07-4.948s-.012-3.668-.07-4.948c-.057-1.277-.238-2.21-.488-3a6.873 6.873 0 00-1.622-2.49 6.873 6.873 0 00-2.49-1.622c-.79-.25-1.723-.431-3-.488C15.668.012 15.263 0 12 0z"/>
+                                <path d="M12 5.838A6.162 6.162 0 105.838 12 6.162 6.162 0 0012 5.838zm0 10.162A4 4 0 1116 12a4 4 0 01-4 4zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/>
+                            </svg>
+                            Instagram
+                        </a>
+                    </div>
 
-</div>
+                </div>
 
 
 

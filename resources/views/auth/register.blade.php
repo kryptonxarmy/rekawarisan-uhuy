@@ -354,7 +354,7 @@
         </label>
       </div>
 
-      <button type="submit" id="registerButton  class="register-button" disabled>
+      <button type="submit" id="registerButton" class="register-button" disabled>
         Daftar
       </button>
 

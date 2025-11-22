@@ -1,7 +1,7 @@
 @extends('frontend.layout.app', ['title' => 'Tulis Artikel Baru'])
 
 @section('content')
-<div class="container mx-auto px-4 py-12">
+<div class="container mx-auto px-4 py-28">
     <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
         <div class="bg-teal-700 px-6 py-4">
             <h2 class="text-2xl font-bold text-white">Tulis Artikel Budaya Baru</h2>
@@ -55,6 +55,7 @@
                         <option value="">Pilih Provinsi</option>
                         <option value="Aceh" {{ old('province') == 'Aceh' ? 'selected' : '' }}>Aceh</option>
                         <option value="Jawa Barat" {{ old('province') == 'Jawa Barat' ? 'selected' : '' }}>Jawa Barat</option>
+                        <option value="Jawa Timur" {{ old('province') == 'Jawa Timur' ? 'selected' : '' }}>Jawa Timur</option>
                         <option value="Bali" {{ old('province') == 'Bali' ? 'selected' : '' }}>Bali</option>
                         <option value="DKI Jakarta" {{ old('province') == 'DKI Jakarta' ? 'selected' : '' }}>DKI Jakarta</option>
                     </select>

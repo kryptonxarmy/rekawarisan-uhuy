@@ -1,13 +1,11 @@
 @extends('frontend.layout.app', ['title' => 'Pustaka Warisan'])
 @section('content')
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-teal-700 to-teal-600 py-16">
-        <div class="container mx-auto px-4 text-center">
-            <img src="{{ asset('images/rekawarisan_removebgpreview.png') }}" alt="Reka Warisan" class="mx-auto mb-4 h-36 md:h-48 lg:h-64" style="max-width:720px; width:auto; filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.45));">
-            <p class="text-white text-lg max-w-4xl mx-auto">
-                Jelajahi akademi literasi digital interaktif, hadapi tantangan Jajak Maestro, dan temukan cara baru berkreasi dari warisan Indonesia. Untuk seluruh pembelajar di Indonesia dan dunia.
-            </p>
-        </div>
+    <div class="min-h-[45vh] 2xl:min-h-[25vh] flex flex-col items-center justify-center text-center px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
+        <img src="{{ asset('assets/landing/logo-herosection.png') }}" alt="">
+        <p class="text-white mt-1 p-4 text-l sm:text-xl max-w-screen-xl leading-relaxed">
+            Jelajahi akademi literasi digital interaktif, hadapi tantangan Jajak Maestro, dan temukan cara baru berkreasi dari warisan Indonesia. Untuk seluruh pembelajar di Indonesia dan dunia.
+        </p>
     </div>
 
     <!-- Main Content -->
