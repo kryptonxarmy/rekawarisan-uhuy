@@ -20,16 +20,20 @@ class Article extends Model
         'author_type',
         'fakta_cepat_id',
         'is_verified',
-        'like_count',
-        'view_count',
         'status',
+    ];
+
+    protected $attributes = [
+        'like_count' => 0,
+        'view_count' => 0,
+        'is_verified' => false,
+        'status' => 'pending',
     ];
 
     protected $casts = [
         'id' => 'integer', // gunakan 'string' jika UUID
         'category_id' => 'integer',
         'author_id' => 'integer',
-        'fakta_cepat_id' => 'integer',
         'is_verified' => 'boolean',
         'like_count' => 'integer',
         'view_count' => 'integer',
@@ -48,8 +52,30 @@ class Article extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function faktaCepat()
+    // Accessor untuk image (hanya menggunakan img_url)
+    public function getImageUrlAttribute()
     {
-        return $this->belongsTo(FaktaCepat::class, 'fakta_cepat_id');
+        return $this->attributes['img_url'] ?: asset('images/default-article.jpg');
+    }
+
+    // Scope untuk filter status
+    public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+
+    public function scopeRejected($query)
+    {
+        return $query->where('status', 'rejected');
     }
 }

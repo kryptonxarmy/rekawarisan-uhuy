@@ -29,10 +29,58 @@ class FaktaCepat extends Model
         'status_unesco',
         'kategori',
         'penampilan',
+        'author_id',
+        'author_type',
+        'is_verified',
+        'status',
+        'img_url',
+    ];
+
+    protected $attributes = [
+        'is_verified' => false,
+        'status' => 'pending',
     ];
 
     protected $casts = [
         'id' => 'integer',
+        'author_id' => 'integer',
+        'is_verified' => 'boolean',
         'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'author_type' => 'string',
+        'status' => 'string',
     ];
+
+    // Relations
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    // Accessor untuk image (hanya menggunakan img_url)
+    public function getImageUrlAttribute()
+    {
+        return $this->attributes['img_url'] ?: asset('images/default-fakta-cepat.jpg');
+    }
+
+    // Scope untuk filter status
+    public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+
+    public function scopeRejected($query)
+    {
+        return $query->where('status', 'rejected');
+    }
 }

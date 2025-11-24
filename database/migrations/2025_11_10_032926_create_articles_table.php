@@ -22,9 +22,9 @@ return new class extends Migration
             $table->unsignedBigInteger('author_id'); // Penulis artikel
             $table->enum('author_type', ['admin', 'user']); // Tipe penulis
             $table->unsignedBigInteger('fakta_cepat_id')->nullable(); // Fakta cepat terkait
-            $table->boolean('is_verified'); // Status verifikasi artikel
-            $table->integer('like_count'); // Jumlah suka
-            $table->integer('view_count'); // Jumlah dibaca
+            $table->boolean('is_verified')->default(false); // Status verifikasi artikel
+            $table->integer('like_count')->default(0); // Jumlah suka
+            $table->integer('view_count')->default(0); // Jumlah dibaca
             $table->enum('status', ['draft', 'pending', 'approved', 'rejected']); // Status publikasi
             $table->timestamps(); // created_at & updated_at
 
