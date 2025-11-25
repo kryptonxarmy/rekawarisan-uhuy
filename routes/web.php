@@ -5,6 +5,7 @@ use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JejakMaestroController;
 use App\Http\Controllers\FaktaCepatController;
+use App\Http\Controllers\QuizController; // Pastikan ini ada
 
 use Illuminate\Support\Facades\Route;
 
@@ -73,7 +74,7 @@ Route::get('/pustaka-warisan/{slug}', [ArticleController::class, 'show'])
 
 
 // ------------------------------------------------------
-// JEJAK MAESTRO
+// JEJAK MAESTRO DAN QUIZ
 // ------------------------------------------------------
 Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])->name('jejakmaestro');
 
@@ -85,6 +86,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('admin.dashboard');
     })->name('dashboard');
 
+    // --- QUIZ ROUTES (URI diperbaiki menjadi /quiz) ---
+    Route::get('/quiz', [QuizController::class, 'play'])->name('quiz.play'); // <-- PERUBAHAN DI SINI
+    Route::post('/quiz/save-score', [QuizController::class, 'saveQuizScore'])->name('quiz.saveScore'); 
+    // ---------------------------------------------
+    
     Route::post('/mission/complete/read', [JejakMaestroController::class, 'completeRead'])->name('mission.complete.read');
     Route::post('/mission/complete/share', [JejakMaestroController::class, 'completeShare'])->name('mission.complete.share');
     Route::post('/mission/complete/quiz',  [JejakMaestroController::class, 'completeQuiz'])->name('mission.complete.quiz');
@@ -175,4 +181,3 @@ Route::post('admin/login', [AuthController::class, 'login']);
 Route::post('admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 require __DIR__.'/auth.php';
-

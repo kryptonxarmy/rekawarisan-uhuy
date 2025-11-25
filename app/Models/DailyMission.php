@@ -11,14 +11,26 @@ class DailyMission extends Model
 
     protected $table = 'daily_missions';
 
+    // <<< PERBAIKAN: Menambahkan kolom yang dibutuhkan oleh firstOrCreate di Controller
     protected $fillable = [
+        'user_id', // WAJIB untuk firstOrCreate di JejakMaestroController
+        'read_done',
+        'share_done',
+        'quiz_done',
+        'points_today',
         'date',
         'title',
         'description',
     ];
+    // >>> AKHIR PERBAIKAN
 
     protected $casts = [
         'date' => 'date',
+        // Tambahkan casting jika kolom boolean dan integer
+        'read_done' => 'boolean',
+        'share_done' => 'boolean',
+        'quiz_done' => 'boolean',
+        'points_today' => 'integer',
     ];
 
     /**
@@ -29,25 +41,18 @@ class DailyMission extends Model
         return $this->hasMany(DailyMissionTask::class, 'daily_mission_id');
     }
 
-    /**
-     * Get the read task for this daily mission.
-     */
+    // ... (Fungsi relasi lainnya seperti readTask, engageTask, quizTask) ...
+    
     public function readTask()
     {
         return $this->hasOne(DailyMissionTask::class, 'daily_mission_id')->where('type', 'read');
     }
 
-    /**
-     * Get the engage task for this daily mission.
-     */
     public function engageTask()
     {
         return $this->hasOne(DailyMissionTask::class, 'daily_mission_id')->where('type', 'engage');
     }
 
-    /**
-     * Get the quiz task for this daily mission.
-     */
     public function quizTask()
     {
         return $this->hasOne(DailyMissionTask::class, 'daily_mission_id')->where('type', 'quiz');

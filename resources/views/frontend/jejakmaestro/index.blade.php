@@ -415,30 +415,37 @@
     </div>
 </div>
 
-{{-- ================= MODAL REWARD BADGE BARU ================= --}}
+{{-- ================= MODAL REWARD BADGE (PENDEK & OPTIMAL) ================= --}}
 @if(session('badge_awarded'))
+    @php
+        $imagePath = session('badge_awarded')['image'];
+        $modalImageSource = str_contains($imagePath, 'assets/') 
+            ? asset($imagePath) 
+            : \Illuminate\Support\Facades\Storage::url($imagePath); 
+    @endphp
 <div id="reward-modal" class="fixed inset-0 z-[99] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
-    <div class="bg-white rounded-3xl shadow-2xl p-8 text-center max-w-md w-full relative transform transition-all animate-bounce-in border-4 border-[#389A92]">
-        <div class="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
-             <div class="absolute top-0 left-0 w-full h-full opacity-20" style="background-image: radial-gradient(#FFD700 2px, transparent 2px); background-size: 30px 30px;"></div>
-        </div>
-        <button onclick="document.getElementById('reward-modal').remove()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-        <h2 class="text-3xl font-black text-amber-500 mb-2 uppercase tracking-widest">Selamat!</h2>
-        <p class="text-gray-600 font-medium mb-6">Anda mendapatkan Badge Baru!</p>
-        <div class="flex justify-center mb-6 relative">
-            <div class="absolute inset-0 bg-yellow-400 rounded-full blur-xl opacity-50 animate-pulse"></div>
-            <img src="{{ asset('assets/jejakmaestro/badge/' . session('badge_awarded')['image']) }}" 
-                 alt="New Badge" 
-                 class="w-40 h-40 relative z-10 drop-shadow-2xl animate-spin-slow-once">
-        </div>
-        <h3 class="text-2xl font-bold text-[#145D63] mb-2">{{ session('badge_awarded')['name'] }}</h3>
-        <p class="text-sm text-gray-500 mb-6">Terus kumpulkan poin untuk melengkapi koleksi maestro Anda.</p>
-        <button onclick="document.getElementById('reward-modal').remove()" class="w-full bg-gradient-to-r from-[#389A92] to-[#2D7A74] text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition transform">
-            Klaim Badge & Lanjut
-        </button>
-    </div>
+    <div class="bg-white rounded-3xl shadow-2xl p-8 text-center max-w-md w-full relative transform transition-all animate-bounce-in border-4 border-[#389A92]">
+        <div class="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
+             <div class="absolute top-0 left-0 w-full h-full opacity-20" style="background-image: radial-gradient(#FFD700 2px, transparent 2px); background-size: 30px 30px;"></div>
+        </div>
+        <button onclick="document.getElementById('reward-modal').remove()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <h2 class="text-3xl font-black text-amber-500 mb-2 uppercase tracking-widest">Selamat!</h2>
+        <p class="text-gray-600 font-medium mb-6">Anda mendapatkan Badge Baru!</p>
+        
+        <div class="flex justify-center mb-6 relative z-10">
+            <img src="{{ $modalImageSource }}" 
+                 alt="New Badge" 
+                 class="**w-24 h-24** relative drop-shadow-2xl animate-spin-slow-once mx-auto"> 
+        </div>
+        
+        <h3 class="text-2xl font-bold text-[#145D63] mb-2">{{ session('badge_awarded')['name'] }}</h3>
+        <p class="text-sm text-gray-500 mb-6">Terus kumpulkan poin untuk melengkapi koleksi maestro Anda.</p>
+        <button onclick="document.getElementById('reward-modal').remove()" class="w-full bg-gradient-to-r from-[#389A92] to-[#2D7A74] text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition transform">
+            Klaim Badge & Lanjut
+        </button>
+    </div>
 </div>
 @endif
 
