@@ -159,6 +159,19 @@ class ArticleController extends Controller
                          ->with('success', 'Artikel disetujui.');
     }
 
+
+    public function show(Article $article)
+{
+    $article->load('category', 'comments.user');
+
+    $relatedArticles = Article::where('category_id', $article->category_id)
+                              ->where('id', '!=', $article->id)
+                              ->take(4)
+                              ->get();
+
+    return view('admin.articles.show', compact('article', 'relatedArticles'));
+}
+
     /**
      * Reject artikel
      */
