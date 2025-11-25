@@ -15,9 +15,10 @@
         <aside class="w-72 bg-[#0F766E] text-white flex-shrink-0 shadow-xl">
             <div class="p-6">
                 <div class="flex items-center gap-3 mb-6">
-
-                    <img src="/images/logo rekawarisan.svg" alt="">
-                    <span class="font-bold text-lg">REKAWARISAN</span>
+                    <a href="{{ route('beranda') }}" class="flex items-center gap-2">
+                        <img src="/images/logo rekawarisan.svg" alt="logo reka warisan">
+                        <span class="font-bold text-lg">REKAWARISAN</span>
+                    </a>
                 </div>
 
                 <!-- Menu Utama -->

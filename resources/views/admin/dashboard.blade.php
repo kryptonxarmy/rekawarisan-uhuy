@@ -1,9 +1,17 @@
 @extends('admin.AdminLayout')
 
 @section('content')
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-[#0F766E]">Dashboard Admin</h1>
-        <p class="text-gray-600 mt-2">Selamat datang di panel administrasi Rekawarisan</p>
+    <div class="mb-8 flex justify-between items-center gap-2">
+        <div>
+            <h1 class="text-3xl font-bold text-[#0F766E]">Dashboard Admin</h1>
+            <p class="text-gray-600 mt-2">Selamat datang di panel administrasi Rekawarisan</p>
+        </div>
+
+        <div>
+            <button onclick="window.location.href='{{ route('beranda') }}'" class="bg-[#0F766E] text-white px-4 py-2 rounded-lg hover:bg-[#0F766E]/90 transition flex items-center gap-2">
+                Kembali ke Beranda &rarr;
+            </button>
+        </div>
     </div>
 
     <!-- Stats Cards -->

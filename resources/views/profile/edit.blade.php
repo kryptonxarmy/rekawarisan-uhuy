@@ -1,4 +1,6 @@
-<x-app-layout>
+@extends('layouts.app') 
+
+@section('content')
     <div class="w-full py-10 px-4 bg-gradient-to-b from-teal-50 to-white">
         
         {{-- Judul Halaman --}}
@@ -9,7 +11,7 @@
 
         {{-- Container --}}
         <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
-
+ 
             {{-- Header Profil --}}
             <div class="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-6 py-10 relative">
 
@@ -155,4 +157,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

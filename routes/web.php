@@ -115,7 +115,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // --- DASHBOARD ---
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('admin.dashboard');
     })->name('dashboard');
 
     // --- JEJAK MAESTRO LOGIC (Dari Temanmu) ---
