@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 
 class QuizController extends Controller
 {
+    public function index()
+    {
+        return $this->play();
+    }
+
     public function play()
     {
         // QUIZ DUMMY TANPA DATABASE
@@ -15,7 +20,6 @@ class QuizController extends Controller
             'description' => 'Jawab pertanyaan berikut untuk menguji pengetahuanmu!',
         ];
 
-        // SOAL DUMMY
         $questions = [
             (object)[
                 'id' => 1,
@@ -34,7 +38,6 @@ class QuizController extends Controller
                 'option_d' => 'Sulawesi Selatan',
             ],
         ];
-
-        return view('quiz.play', compact('quiz', 'questions'));
+        return view('quiz.index', compact('quiz', 'questions'));
     }
 }

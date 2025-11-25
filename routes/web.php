@@ -108,26 +108,6 @@ Route::middleware('auth')->group(function () {
 // QUIZ FRONTEND
 // ------------------------------------------------------
 Route::get('/quiz', [QuizController::class, 'index'])->name('quiz.index');
-Route::get('/quiz/play', [QuizController::class, 'play']);
-Route::post('/quiz/submit', [QuizController::class, 'submit'])->name('quiz.submit');
-
-
-// ------------------------------------------------------
-// QUIZ ADMIN (CRUD)
-// ------------------------------------------------------
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-
-    Route::resource('quizzes', QuizAdminController::class);
-
-    Route::get('quizzes/{quiz_id}/questions', [QuestionAdminController::class, 'index'])->name('questions.index');
-    Route::get('quizzes/{quiz_id}/questions/create', [QuestionAdminController::class, 'create'])->name('questions.create');
-    Route::post('quizzes/{quiz_id}/questions', [QuestionAdminController::class, 'store'])->name('questions.store');
-    Route::get('quizzes/{quiz_id}/questions/{id}/edit', [QuestionAdminController::class, 'edit'])->name('questions.edit');
-    Route::put('quizzes/{quiz_id}/questions/{id}', [QuestionAdminController::class, 'update'])->name('questions.update');
-    Route::delete('quizzes/{quiz_id}/questions/{id}', [QuestionAdminController::class, 'destroy'])->name('questions.destroy');
-});
-
-
 // ------------------------------------------------------
 // AUTH ROUTES
 // ------------------------------------------------------
