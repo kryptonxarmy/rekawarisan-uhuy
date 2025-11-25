@@ -16,13 +16,22 @@ class ArticleCategory extends Model
 {
     use HasFactory;
 
+    // Disable timestamps since we only have created_at manually
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
         'description',
+        'created_at',
     ];
 
     protected $casts = [
         'id' => 'integer',
         'created_at' => 'datetime',
     ];
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class, 'category_id');
+    }
 }

@@ -26,9 +26,14 @@ class Article extends Model
         'author_type',
         'fakta_cepat_id',
         'is_verified',
-        'like_count',
-        'view_count',
         'status',
+    ];
+
+    protected $attributes = [
+        'like_count' => 0,
+        'view_count' => 0,
+        'is_verified' => false,
+        'status' => 'pending',
     ];
 
     /**
