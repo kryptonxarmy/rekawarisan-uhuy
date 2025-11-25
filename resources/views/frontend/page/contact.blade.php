@@ -1,7 +1,7 @@
 @extends('frontend.layout.app', ['title' => 'Contact'])
 @section('content')
  <div class="bg-gray-100 min-h-screen">
-    
+
      <!-- hero section -->
     <div class="min-h-[30vh] xl:min-h-[25vh] 2xl:min-h-[15vh]  flex flex-col px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
         <div class="container mt-5 p-4 relative z-10">
@@ -14,10 +14,10 @@
         </div>
     </div>
 
-
+    
     <main class="container mx-auto px-6 py-12">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
+
             <!-- Contact Info Cards -->
             <div class="lg:col-span-1 space-y-6">
                 <!-- Lokasi Card -->
@@ -81,7 +81,7 @@
                         <div class="w-16 h-1 bg-gradient-to-r from-[#389A92] to-[#2D7A74] rounded-full mt-2"></div>
                     </div>
                 </div>
-                
+
                 <!-- Description -->
                 <p class="text-gray-700 text-lg mb-8 leading-relaxed bg-[#389A92]/5 p-4 rounded-xl border-l-4 border-[#389A92]">
                     Masukkan, kritik, dan saran Anda sangat berarti bagi kami. Bantu Reka Warisan untuk terus berkembang dengan membagikan pengalaman dan pemikiran Anda melalui formulir di bawah ini.
@@ -92,7 +92,7 @@
                     <!-- Nama -->
                     <div class="group">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                        <input type="text" placeholder="Masukkan nama lengkap Anda" 
+                        <input type="text" placeholder="Masukkan nama lengkap Anda"
                             class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#389A92] focus:border-[#389A92] transition-all duration-300 group-hover:border-[#389A92]/50 bg-white shadow-sm">
                     </div>
 
@@ -100,12 +100,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="group">
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
-                            <input type="email" placeholder="email@contoh.com" 
+                            <input type="email" placeholder="email@contoh.com"
                                 class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#389A92] focus:border-[#389A92] transition-all duration-300 group-hover:border-[#389A92]/50 bg-white shadow-sm">
                         </div>
                         <div class="group">
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor Telepon</label>
-                            <input type="tel" placeholder="08xx xxxx xxxx" 
+                            <input type="tel" placeholder="08xx xxxx xxxx"
                                 class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#389A92] focus:border-[#389A92] transition-all duration-300 group-hover:border-[#389A92]/50 bg-white shadow-sm">
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" 
+                    <button type="submit"
                             class="w-full bg-gradient-to-r from-[#389A92] to-[#2D7A74] hover:from-[#2D7A74] hover:to-[#389A92] text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 border border-[#389A92]/20 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                         <span class="flex items-center justify-center gap-3 text-lg relative z-10">
@@ -140,7 +140,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Ambil elemen form berdasarkan ID
         const form = document.getElementById('contactForm');
-        
+
         // Pengecekan krusial
         if (!form) {
             console.error('ERROR: Form dengan ID "contactForm" tidak ditemukan.');
@@ -150,13 +150,13 @@
         // Tambahkan event listener untuk submit
         form.addEventListener('submit', function(e) {
             // Mencegah form melakukan submit default (yang menyebabkan refresh instan)
-            e.preventDefault(); 
-            
+            e.preventDefault();
+
             // Tampilkan Notifikasi (Alert)
             alert("Terima kasih sudah mengirimkan pesan Anda kepada kami. Kami akan membalas pesan Anda dalam waktu 1x24 jam.");
-            
+
             // Refresh Halaman: Ini hanya akan dijalankan setelah pengguna menekan 'OK' pada alert.
-            window.location.reload(); 
+            window.location.reload();
         });
     });
 </script>

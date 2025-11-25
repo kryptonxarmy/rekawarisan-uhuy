@@ -15,13 +15,14 @@
         </div>
     </div>
 
+
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Content -->
             <div class="lg:col-span-2">
                 <!-- Title Section -->
-                <div class="mb-6">
+                <div class="mb-6 mt-4">
                     <h1 class="text-4xl font-bold text-gray-900 mb-4">Tari saman - Budaya Suku Gayo Aceh</h1>
                     <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                         <span>Kategori: <span class="text-teal-600 font-semibold">Tarian</span></span>
@@ -221,7 +222,7 @@
             <div class="lg:col-span-1">
                 <div class="bg-teal-700 text-white rounded-lg shadow-lg p-6 sticky top-4">
                     <h3 class="text-2xl font-bold mb-6">Fakta Cepat</h3>
-                    
+
                     <div class="space-y-6">
                         <div>
                             <h4 class="font-bold mb-2">Tari Saman</h4>
