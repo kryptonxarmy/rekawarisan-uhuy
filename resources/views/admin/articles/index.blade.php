@@ -37,14 +37,16 @@
     </div>
 </div>
 
-<!-- TAB KONTEN ARTIKEL ADMIN -->
 <div id="content-admin" class="tab-content">
     <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead>
                 <tr class="text-left bg-gray-100 text-gray-700">
+                    <th class="px-4 py-2">Thumbnail</th>
                     <th class="px-4 py-2">Judul</th>
                     <th class="px-4 py-2">Kategori</th>
+                    <th class="px-4 py-2">Provinsi</th>
+                    <th class="px-4 py-2">Kabupaten</th>
                     <th class="px-4 py-2">Status</th>
                     <th class="px-4 py-2">Aksi</th>
                 </tr>
@@ -52,11 +54,31 @@
             <tbody>
                 @foreach ($articles->where('author_type', 'admin') as $article)
                     <tr class="border-b">
+                        <td class="px-4 py-2">
+                            <img src="{{ asset($article->img_url) }}" class="w-12 h-12 object-cover rounded border">
+                        </td>
                         <td class="px-4 py-2">{{ $article->title }}</td>
                         <td class="px-4 py-2">{{ $article->category->name ?? '-' }}</td>
-                        <td class="px-4 py-2">{{ $article->status }}</td>
+                        <td class="px-4 py-2">{{ $article->province ?? '-' }}</td>
+                        <td class="px-4 py-2">{{ $article->regency ?? '-' }}</td>
                         <td class="px-4 py-2">
-                            <a href="{{ route('admin.articles.edit', $article->id) }}" class="text-blue-500">Edit</a>
+                            <span class="px-2 py-1 rounded text-xs bg-green-100 text-green-700">
+                                Approved
+                            </span>
+                        </td>
+                        <td class="px-4 py-2 space-x-2">
+
+                            <a href="{{ route('admin.articles.show', $article->id) }}" class="text-green-600">Show</a>
+
+                            <a href="{{ route('admin.articles.edit', $article->id) }}" class="text-blue-600">Edit</a>
+
+                            <form action="{{ route('admin.articles.destroy', $article->id) }}"
+                                  method="POST" class="inline-block"
+                                  onsubmit="return confirm('Yakin hapus?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-red-600">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
@@ -65,14 +87,17 @@
     </div>
 </div>
 
-<!-- TAB KONTEN ARTIKEL USER -->
+
 <div id="content-user" class="tab-content hidden">
     <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead>
                 <tr class="text-left bg-gray-100 text-gray-700">
+                    <th class="px-4 py-2">Thumbnail</th>
                     <th class="px-4 py-2">Judul</th>
                     <th class="px-4 py-2">Kategori</th>
+                    <th class="px-4 py-2">Provinsi</th>
+                    <th class="px-4 py-2">Kabupaten</th>
                     <th class="px-4 py-2">Status</th>
                     <th class="px-4 py-2">Aksi</th>
                 </tr>
@@ -80,18 +105,53 @@
             <tbody>
                 @foreach ($articles->where('author_type', 'user') as $article)
                     <tr class="border-b">
+                        <td class="px-4 py-2">
+                            <img src="{{ asset($article->img_url) }}" class="w-12 h-12 object-cover rounded border">
+                        </td>
                         <td class="px-4 py-2">{{ $article->title }}</td>
                         <td class="px-4 py-2">{{ $article->category->name ?? '-' }}</td>
-                        <td class="px-4 py-2">{{ $article->status }}</td>
+                        <td class="px-4 py-2">{{ $article->province ?? '-' }}</td>
+                        <td class="px-4 py-2">{{ $article->regency ?? '-' }}</td>
                         <td class="px-4 py-2">
-                            <a href="{{ route('admin.articles.edit', $article->id) }}" class="text-blue-500">Edit</a>
-                            @if ($article->status !== 'approved')
-                                <form method="POST" action="{{ route('admin.articles.approve', $article->id) }}" class="inline-block">
+                            <span class="px-2 py-1 rounded text-xs
+                                @if($article->status=='approved') bg-green-100 text-green-700
+                                @elseif($article->status=='rejected') bg-red-100 text-red-700
+                                @else bg-yellow-100 text-yellow-700 @endif">
+                                {{ ucfirst($article->status) }}
+                            </span>
+                        </td>
+
+                        <td class="px-4 py-2 space-x-2">
+
+                           <a href="{{ route('admin.articles.show', $article->id) }}" class="text-green-600">Show</a>
+
+                            <!-- Edit -->
+                            <a href="{{ route('admin.articles.edit', $article->id) }}" class="text-blue-600">Edit</a>
+
+                            <!-- Approve -->
+                            @if ($article->status == 'pending')
+                                <form method="POST" action="{{ route('admin.articles.approve', $article->id) }}"
+                                      class="inline-block">
                                     @csrf
-                                    @method('PUT')
-                                    <button class="text-green-600 ml-2">Approve</button>
+                                    <button class="text-green-600">Approve</button>
+                                </form>
+
+                                <form method="POST" action="{{ route('admin.articles.reject', $article->id) }}"
+                                      class="inline-block ml-2">
+                                    @csrf
+                                    <button class="text-red-600">Reject</button>
                                 </form>
                             @endif
+
+                            <!-- Delete -->
+                            <form action="{{ route('admin.articles.destroy', $article->id) }}"
+                                  method="POST" class="inline-block ml-2"
+                                  onsubmit="return confirm('Yakin hapus?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-red-600">Delete</button>
+                            </form>
+
                         </td>
                     </tr>
                 @endforeach
@@ -99,6 +159,7 @@
         </table>
     </div>
 </div>
+
 
 @if (session('success'))
     <div class="fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">

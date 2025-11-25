@@ -3,137 +3,168 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\ArticleCategory;
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
     /**
-     * Display a listing of articles with tabs.
+     * Konstruktor: Semua route hanya untuk admin.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Menampilkan daftar semua artikel dengan relasi author & category
      */
     public function index()
     {
-        // Load all articles with relationships
         $articles = Article::with(['author', 'category'])->latest()->get();
-
         return view('admin.articles.index', compact('articles'));
     }
 
     /**
-     * Show the form for creating a new article
+     * Form untuk membuat artikel baru
      */
     public function create()
     {
-        $categories = ArticleCategory::all();
+        $categories = ArticleCategory::orderBy('name', 'asc')->get();
         return view('admin.articles.create', compact('categories'));
     }
 
     /**
-     * Store a newly created article in storage
+     * Menyimpan artikel baru
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'title'        => 'required|string|max:255',
-            'content'      => 'required|string',
-            'thumbnail'    => 'nullable|image|max:2048',
-            'category_id'  => 'nullable|exists:article_categories,id',
-            'province'     => 'nullable|string', // gunakan nama, bukan id
-            'regency'      => 'nullable|string',
+        $validatedData = $request->validate([
+            'title'       => 'required|string|max:190',
+            'content'     => 'required|string|min:50',
+            'category_id' => 'required|integer|exists:article_categories,id',
+            'province'    => 'nullable|string|max:100',
+            'regency'     => 'nullable|string|max:100',
+            'thumbnail'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
-if ($request->hasFile('thumbnail')) {
-    $file = $request->file('thumbnail');
-    $filename = time() . '_' . $file->getClientOriginalName();
+        $imgUrlPath = null;
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $slug = Str::slug($request->input('title')) . '-' . time();
+            $filename = $slug . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('articles', $filename, 'public');
+            $imgUrlPath = Storage::url($path);
+        }
 
-    // Simpan langsung ke public/articles
-    $file->move(public_path('articles'), $filename);
+        $article = Article::create([
+            'author_id'   => Auth::id(),
+            'author_type' => Auth::user()->role,
+            'title'       => $validatedData['title'],
+            'content'     => $validatedData['content'],
+            'category_id' => $validatedData['category_id'],
+            'province'    => $validatedData['province'] ?? null,
+            'regency'     => $validatedData['regency'] ?? null,
+            'img_url'     => $imgUrlPath,
+            'status'      => 'approved', // Admin langsung approve
+            'is_verified' => true,
+            'like_count'  => 0,
+            'view_count'  => 0,
+        ]);
 
-    // Simpan path untuk asset()
-    $data['img_url'] = 'articles/' . $filename;
-}
-
-
-        // Simpan identitas author
-        $data['author_id']   = auth()->id();
-        $data['author_type'] = auth()->user()->role;
-
-        // Penentuan status
-        $data['status'] = auth()->user()->role === 'admin'
-                        ? 'approved'
-                        : 'pending';
-
-        Article::create($data);
-
-        return redirect()
-            ->route('admin.articles.index')
-            ->with('success', 'Artikel berhasil dibuat.');
+        return redirect()->route('admin.articles.index')
+                         ->with('success', 'Artikel berhasil dibuat dan disetujui.');
     }
 
     /**
-     * Show the form for editing an article
+     * Form untuk edit artikel
      */
     public function edit(Article $article)
     {
-        $categories = ArticleCategory::all();
+        $categories = ArticleCategory::orderBy('name', 'asc')->get();
         return view('admin.articles.edit', compact('article', 'categories'));
     }
 
     /**
-     * Update an article
+     * Update artikel
      */
     public function update(Request $request, Article $article)
     {
-        $data = $request->validate([
-            'title'       => 'required|string|max:255',
-            'content'     => 'required|string',
-            'thumbnail'   => 'nullable|image|max:2048',
-            'category_id' => 'nullable|exists:article_categories,id',
+        $validatedData = $request->validate([
+            'title'       => 'required|string|max:190',
+            'content'     => 'required|string|min:50',
+            'category_id' => 'required|integer|exists:article_categories,id',
+            'province'    => 'nullable|string|max:100',
+            'regency'     => 'nullable|string|max:100',
             'status'      => 'required|in:pending,approved,rejected',
-            'province'    => 'nullable|string',
-            'regency'     => 'nullable|string',
+            'thumbnail'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
-        // Jika update thumbnail
+        $imgUrlPath = $article->img_url;
         if ($request->hasFile('thumbnail')) {
-            $data['img_url'] = $request->file('thumbnail')->store('articles', 'public');
+            // Hapus thumbnail lama
+            if ($article->img_url) {
+                $pathToDelete = str_replace(Storage::url(''), '', $article->img_url);
+                Storage::disk('public')->delete($pathToDelete);
+            }
+
+            $file = $request->file('thumbnail');
+            $slug = Str::slug($request->input('title')) . '-' . time();
+            $filename = $slug . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('articles', $filename, 'public');
+            $imgUrlPath = Storage::url($path);
         }
 
-        $article->update($data);
+        $article->update([
+            'title'       => $validatedData['title'],
+            'content'     => $validatedData['content'],
+            'category_id' => $validatedData['category_id'],
+            'province'    => $validatedData['province'] ?? null,
+            'regency'     => $validatedData['regency'] ?? null,
+            'status'      => $validatedData['status'],
+            'img_url'     => $imgUrlPath,
+        ]);
 
         return redirect()->route('admin.articles.index')
-                         ->with('success', 'Artikel berhasil diupdate.');
+                         ->with('success', 'Artikel berhasil diperbarui.');
     }
 
     /**
-     * Delete an article
+     * Hapus artikel
      */
     public function destroy(Article $article)
     {
+        if ($article->img_url) {
+            $pathToDelete = str_replace(Storage::url(''), '', $article->img_url);
+            Storage::disk('public')->delete($pathToDelete);
+        }
+
         $article->delete();
+
         return redirect()->route('admin.articles.index')
                          ->with('success', 'Artikel berhasil dihapus.');
     }
 
     /**
-     * Approve article
+     * Approve artikel
      */
     public function approve(Article $article)
     {
         $article->update(['status' => 'approved']);
-
         return redirect()->route('admin.articles.index')
                          ->with('success', 'Artikel disetujui.');
     }
 
     /**
-     * Reject article
+     * Reject artikel
      */
     public function reject(Article $article)
     {
         $article->update(['status' => 'rejected']);
-
         return redirect()->route('admin.articles.index')
                          ->with('success', 'Artikel ditolak.');
     }

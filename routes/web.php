@@ -103,6 +103,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Untuk user submit artikel
+Route::post('/articles/store-user', [ArticleController::class, 'store'])
+     ->name('user.articles.store')
+     ->middleware('auth');
+
+
 // ARTIKEL
 // Enduser
 Route::resource('articles', ArticleController::class);

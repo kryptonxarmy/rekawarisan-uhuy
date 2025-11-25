@@ -80,27 +80,22 @@
 
             <!-- Provinsi & Kabupaten -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
+                <!-- Provinsi -->
+                <div class="mb-6">
                     <label for="province" class="block text-sm font-medium text-gray-700 mb-2">Provinsi</label>
-                    <select name="province" id="province"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0F766E] focus:border-[#0F766E]"
-                        onchange="loadRegencies(this.value)">
+                    <select id="province" class="w-full ...">
                         <option value="">Pilih Provinsi</option>
                     </select>
-                    @error('province')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <input type="hidden" name="province" id="province_name">
                 </div>
-                <div>
+
+                <!-- Kabupaten/Kota -->
+                <div class="mb-6">
                     <label for="regency" class="block text-sm font-medium text-gray-700 mb-2">Kabupaten/Kota</label>
-                    <select name="regency" id="regency"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0F766E] focus:border-[#0F766E]"
-                        disabled>
+                    <select id="regency" class="w-full ..." disabled>
                         <option value="">Pilih Kabupaten/Kota</option>
                     </select>
-                    @error('regency')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <input type="hidden" name="regency" id="regency_name">
                 </div>
             </div>
 
@@ -149,148 +144,51 @@
             document.getElementById('image-preview').classList.add('hidden');
         }
 
-        // Load provinces on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadProvinces();
-        });
+        document.addEventListener('DOMContentLoaded', loadProvinces);
 
-        // Load provinces from API
-        async function loadProvinces() {
-            try {
-                console.log('Loading provinces...');
-                const response = await fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json');
+        async function loadProvinces(){
+            const res = await fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json');
+            const provinces = await res.json();
+            const select = document.getElementById('province');
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const provinces = await response.json();
-                console.log('Provinces data:', provinces);
-
-                const provinceSelect = document.getElementById('province');
-
-                provinces.forEach(province => {
-                    const option = document.createElement('option');
-                    option.value = province.name;
-                    option.textContent = province.name;
-                    provinceSelect.appendChild(option);
-                });
-
-                console.log('Provinces loaded successfully');
-            } catch (error) {
-                console.error('Error loading provinces:', error);
-
-                // Fallback: add some manual provinces for testing
-                const provinceSelect = document.getElementById('province');
-                const fallbackProvinces = [{
-                        id: '11',
-                        name: 'ACEH'
-                    },
-                    {
-                        id: '12',
-                        name: 'SUMATERA UTARA'
-                    },
-                    {
-                        id: '13',
-                        name: 'SUMATERA BARAT'
-                    },
-                    {
-                        id: '32',
-                        name: 'JAWA BARAT'
-                    },
-                    {
-                        id: '33',
-                        name: 'JAWA TENGAH'
-                    },
-                    {
-                        id: '34',
-                        name: 'DI YOGYAKARTA'
-                    },
-                    {
-                        id: '35',
-                        name: 'JAWA TIMUR'
-                    },
-                ];
-
-                fallbackProvinces.forEach(province => {
-                    const option = document.createElement('option');
-                    option.value = province.id;
-                    option.textContent = province.name;
-                    provinceSelect.appendChild(option);
-                });
-            }
+            provinces.forEach(p=>{
+                const option = document.createElement('option');
+                option.value = p.id;        // tetap id untuk API
+                option.textContent = p.name;
+                option.dataset.name = p.name; // simpan nama di dataset
+                select.appendChild(option);
+            });
         }
 
-        // Load regencies based on selected province
-        async function loadRegencies(provinceCode) {
-            const regencySelect = document.getElementById('regency');
+        // Saat provinsi dipilih, load kabupaten
+        document.getElementById('province').addEventListener('change', async function(){
+            const selected = this.selectedOptions[0];
+            document.getElementById('province_name').value = selected.dataset.name;
 
-            // Clear and disable regency select
+            const regencySelect = document.getElementById('regency');
             regencySelect.innerHTML = '<option value="">Pilih Kabupaten/Kota</option>';
             regencySelect.disabled = true;
 
-            if (!provinceCode) return;
+            if(!this.value) return;
 
-            try {
-                console.log('Loading regencies for province:', provinceCode);
-                const response = await fetch(
-                    `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceCode}.json`);
+            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${this.value}.json`);
+            const regencies = await res.json();
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+            regencies.forEach(r=>{
+                const option = document.createElement('option');
+                option.value = r.id;
+                option.textContent = r.name;
+                option.dataset.name = r.name;
+                regencySelect.appendChild(option);
+            });
 
-                const regencies = await response.json();
-                console.log('Regencies data:', regencies);
+            regencySelect.disabled = false;
+        });
 
-                regencies.forEach(regency => {
-                    const option = document.createElement('option');
-                    option.value = regency.name;
-                    option.textContent = regency.name;
-                    regencySelect.appendChild(option);
-                });
-
-                regencySelect.disabled = false;
-                console.log('Regencies loaded successfully');
-            } catch (error) {
-                console.error('Error loading regencies:', error);
-
-                // Fallback data for testing (based on common regencies)
-                const fallbackRegencies = [{
-                        id: '1101',
-                        name: 'KABUPATEN SIMEULUE'
-                    },
-                    {
-                        id: '1102',
-                        name: 'KABUPATEN ACEH SINGKIL'
-                    },
-                    {
-                        id: '1103',
-                        name: 'KABUPATEN ACEH SELATAN'
-                    },
-                    {
-                        id: '1171',
-                        name: 'KOTA BANDA ACEH'
-                    },
-                    {
-                        id: '1201',
-                        name: 'KABUPATEN NIAS'
-                    },
-                    {
-                        id: '1202',
-                        name: 'KABUPATEN MANDAILING NATAL'
-                    },
-                ];
-
-                fallbackRegencies.forEach(regency => {
-                    const option = document.createElement('option');
-                    option.value = regency.id;
-                    option.textContent = regency.name;
-                    regencySelect.appendChild(option);
-                });
-
-                regencySelect.disabled = false;
-            }
-        }
-    </script>
-@endsection
+        // Saat kabupaten dipilih, simpan nama di hidden input
+        document.getElementById('regency').addEventListener('change', function(){
+            const selected = this.selectedOptions[0];
+            document.getElementById('regency_name').value = selected.dataset.name;
+        });
+        </script>
+        @endsection
