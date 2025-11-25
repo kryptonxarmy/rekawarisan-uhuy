@@ -52,29 +52,36 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
+
                         @foreach ($dailyMissions as $dailyMission)
-                            <tr class="hover:bg-gray-50 {{ $dailyMission->date->isToday() ? 'bg-blue-50' : '' }}">
+                            @php
+                                $date = $dailyMission->date ? \Carbon\Carbon::parse($dailyMission->date) : null;
+                            @endphp
+
+                            <tr class="hover:bg-gray-50 {{ $date && $date->isToday() ? 'bg-blue-50' : '' }}">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div>
                                             <div class="text-sm font-medium text-gray-900">
-                                                {{ $dailyMission->date->format('d M Y') }}
+                                                {{ $date ? $date->format('d M Y') : '-' }}
                                             </div>
                                             <div class="text-xs text-gray-500">
-                                                {{ $dailyMission->date->format('l') }}
+                                                {{ $date ? $date->format('l') : '-' }}
                                             </div>
                                         </div>
-                                        @if ($dailyMission->date->isToday())
+
+                                        @if ($date && $date->isToday())
                                             <span class="ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                                                 Hari Ini
                                             </span>
-                                        @elseif ($dailyMission->date->isFuture())
+                                        @elseif ($date && $date->isFuture())
                                             <span class="ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                                                 Mendatang
                                             </span>
                                         @endif
                                     </div>
                                 </td>
+
                                 <td class="px-6 py-4">
                                     <div>
                                         <div class="text-sm font-medium text-gray-900">
@@ -85,6 +92,7 @@
                                         </div>
                                     </div>
                                 </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex flex-col space-y-1">
                                         @foreach ($dailyMission->tasks as $task)
@@ -102,20 +110,23 @@
                                                         🧠 Quiz
                                                     </span>
                                                 @endif
+
                                                 <span class="ml-2 text-xs text-gray-500">{{ $task->xp_reward }} XP</span>
                                             </div>
                                         @endforeach
                                     </div>
                                 </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $dailyMission->tasks->sum('xp_reward') }} XP
                                 </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($dailyMission->date->isPast() && !$dailyMission->date->isToday())
+                                    @if ($date && $date->isPast() && !$date->isToday())
                                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
                                             Selesai
                                         </span>
-                                    @elseif ($dailyMission->date->isToday())
+                                    @elseif ($date && $date->isToday())
                                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                                             Aktif
                                         </span>
@@ -125,19 +136,23 @@
                                         </span>
                                     @endif
                                 </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-2">
                                         <a href="{{ route('admin.daily-missions.show', $dailyMission) }}"
                                             class="text-blue-600 hover:text-blue-900" title="Lihat Detail">
                                             <x-heroicon-s-eye class="h-4 w-4" />
                                         </a>
+
                                         <a href="{{ route('admin.daily-missions.edit', $dailyMission) }}"
                                             class="text-yellow-600 hover:text-yellow-900" title="Edit">
                                             <x-heroicon-s-pencil class="h-4 w-4" />
                                         </a>
-                                        @if ($dailyMission->date->isFuture())
-                                            <form action="{{ route('admin.daily-missions.destroy', $dailyMission) }}" method="POST"
-                                                class="inline" onsubmit="return confirm('Yakin ingin menghapus misi harian ini?')">
+
+                                        @if ($date && $date->isFuture())
+                                            <form action="{{ route('admin.daily-missions.destroy', $dailyMission) }}" 
+                                                method="POST" class="inline"
+                                                onsubmit="return confirm('Yakin ingin menghapus misi harian ini?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900" title="Hapus">
@@ -147,18 +162,20 @@
                                         @endif
                                     </div>
                                 </td>
+
                             </tr>
                         @endforeach
+
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination -->
             @if ($dailyMissions->hasPages())
                 <div class="px-6 py-3 border-t border-gray-200">
                     {{ $dailyMissions->links() }}
                 </div>
             @endif
+
         @else
             <div class="text-center py-12">
                 <x-heroicon-o-calendar-days class="mx-auto h-12 w-12 text-gray-400" />
