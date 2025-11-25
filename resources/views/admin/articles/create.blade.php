@@ -78,26 +78,6 @@
                 @enderror
             </div>
 
-            <!-- Fakta Cepat Terkait -->
-            <div class="mb-6">
-                <label for="fakta_cepat_id" class="block text-sm font-medium text-gray-700 mb-2">
-                    Fakta Cepat Terkait (Opsional)
-                </label>
-                <select name="fakta_cepat_id" id="fakta_cepat_id"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0F766E] focus:border-[#0F766E]">
-                    <option value="">Tidak ada fakta cepat terkait</option>
-                    @foreach ($faktaCepats as $faktaCepat)
-                        <option value="{{ $faktaCepat->id }}" {{ old('fakta_cepat_id') == $faktaCepat->id ? 'selected' : '' }}>
-                            {{ $faktaCepat->nama }} - {{ $faktaCepat->asal }}
-                        </option>
-                    @endforeach
-                </select>
-                <p class="text-sm text-gray-500 mt-1">Pilih fakta cepat yang berkaitan dengan artikel ini</p>
-                @error('fakta_cepat_id')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-
             <!-- Provinsi & Kabupaten -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
@@ -191,7 +171,7 @@
 
                 provinces.forEach(province => {
                     const option = document.createElement('option');
-                    option.value = province.id;
+                    option.value = province.name;
                     option.textContent = province.name;
                     provinceSelect.appendChild(option);
                 });
@@ -265,7 +245,7 @@
 
                 regencies.forEach(regency => {
                     const option = document.createElement('option');
-                    option.value = regency.id;
+                    option.value = regency.name;
                     option.textContent = regency.name;
                     regencySelect.appendChild(option);
                 });

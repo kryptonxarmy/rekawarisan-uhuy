@@ -37,6 +37,69 @@
     </div>
 </div>
 
+<!-- TAB KONTEN ARTIKEL ADMIN -->
+<div id="content-admin" class="tab-content">
+    <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead>
+                <tr class="text-left bg-gray-100 text-gray-700">
+                    <th class="px-4 py-2">Judul</th>
+                    <th class="px-4 py-2">Kategori</th>
+                    <th class="px-4 py-2">Status</th>
+                    <th class="px-4 py-2">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($articles->where('author_type', 'admin') as $article)
+                    <tr class="border-b">
+                        <td class="px-4 py-2">{{ $article->title }}</td>
+                        <td class="px-4 py-2">{{ $article->category->name ?? '-' }}</td>
+                        <td class="px-4 py-2">{{ $article->status }}</td>
+                        <td class="px-4 py-2">
+                            <a href="{{ route('admin.articles.edit', $article->id) }}" class="text-blue-500">Edit</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- TAB KONTEN ARTIKEL USER -->
+<div id="content-user" class="tab-content hidden">
+    <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead>
+                <tr class="text-left bg-gray-100 text-gray-700">
+                    <th class="px-4 py-2">Judul</th>
+                    <th class="px-4 py-2">Kategori</th>
+                    <th class="px-4 py-2">Status</th>
+                    <th class="px-4 py-2">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($articles->where('author_type', 'user') as $article)
+                    <tr class="border-b">
+                        <td class="px-4 py-2">{{ $article->title }}</td>
+                        <td class="px-4 py-2">{{ $article->category->name ?? '-' }}</td>
+                        <td class="px-4 py-2">{{ $article->status }}</td>
+                        <td class="px-4 py-2">
+                            <a href="{{ route('admin.articles.edit', $article->id) }}" class="text-blue-500">Edit</a>
+                            @if ($article->status !== 'approved')
+                                <form method="POST" action="{{ route('admin.articles.approve', $article->id) }}" class="inline-block">
+                                    @csrf
+                                    @method('PUT')
+                                    <button class="text-green-600 ml-2">Approve</button>
+                                </form>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
 @if (session('success'))
     <div class="fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">
         {{ session('success') }}

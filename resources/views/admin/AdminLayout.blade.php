@@ -111,6 +111,7 @@
             @yield('content')
         </main>
     </div>
+    @yield('scripts')
 </body>
 <script>
     function showLogoutModal() {

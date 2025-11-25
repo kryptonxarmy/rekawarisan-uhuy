@@ -24,7 +24,6 @@ class Article extends Model
         'regency',
         'author_id',
         'author_type',
-        'fakta_cepat_id',
         'is_verified',
         'status',
     ];
