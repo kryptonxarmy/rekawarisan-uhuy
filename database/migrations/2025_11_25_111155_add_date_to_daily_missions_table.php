@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('daily_missions', function (Blueprint $table) {
-            $table->id();
-            $table->date('date')->unique();
-            $table->string('title');
-            $table->text('description');
-            $table->timestamps();
+        Schema::table('daily_missions', function (Blueprint $table) {
+            // Tambahkan kolom date, nullable supaya tidak error
+            $table->date('date')->nullable()->after('id');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('daily_missions');
+        Schema::table('daily_missions', function (Blueprint $table) {
+            $table->dropColumn('date');
+        });
     }
 };
