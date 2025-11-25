@@ -66,7 +66,7 @@
                                 Approved
                             </span>
                         </td>
-                        <td class="px-4 py-2 space-x-2">
+                        <td class="px-4 py-2 space-x-2 flex items-center justify-center">
 
                             <a href="{{ route('admin.articles.show', $article->id) }}" class="text-green-600">Show</a>
 
@@ -128,21 +128,6 @@
                             <!-- Edit -->
                             <a href="{{ route('admin.articles.edit', $article->id) }}" class="text-blue-600">Edit</a>
 
-                            <!-- Approve -->
-                            @if ($article->status == 'pending')
-                                <form method="POST" action="{{ route('admin.articles.approve', $article->id) }}"
-                                      class="inline-block">
-                                    @csrf
-                                    <button class="text-green-600">Approve</button>
-                                </form>
-
-                                <form method="POST" action="{{ route('admin.articles.reject', $article->id) }}"
-                                      class="inline-block ml-2">
-                                    @csrf
-                                    <button class="text-red-600">Reject</button>
-                                </form>
-                            @endif
-
                             <!-- Delete -->
                             <form action="{{ route('admin.articles.destroy', $article->id) }}"
                                   method="POST" class="inline-block ml-2"
@@ -151,6 +136,21 @@
                                 @method('DELETE')
                                 <button class="text-red-600">Delete</button>
                             </form>
+
+                            <!-- Approve -->
+                            @if ($article->status == 'pending')
+                                <form method="POST" action="{{ route('admin.articles.approve', $article->id) }}"
+                                      class="inline-block">
+                                    @csrf
+                                    <button class="bg-green-600 text-white px-2 py-1 rounded">Approve</button>
+                                </form>
+
+                                <form method="POST" action="{{ route('admin.articles.reject', $article->id) }}"
+                                      class="inline-block ml-2">
+                                    @csrf
+                                    <button class="bg-red-600 text-white px-2 py-1 rounded">Reject</button>
+                                </form>
+                            @endif
 
                         </td>
                     </tr>

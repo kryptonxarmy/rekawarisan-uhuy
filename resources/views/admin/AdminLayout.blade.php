@@ -83,10 +83,14 @@
                             <span>Kotak Masuk</span>
                         </a>
                         <!-- Tombol Logout -->
-                        <button type="button" onclick="showLogoutModal()" class="w-full py-2.5 px-4 rounded-lg flex items-center gap-3 text-left hover:bg-white/10 text-white mt-4">
-                            <x-heroicon-s-arrow-left-on-rectangle class="h-5 w-5 text-white" />
-                            <span>Logout</span>
-                        </button>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full py-2.5 px-4 rounded-lg flex items-center gap-3 text-left hover:bg-white/10 text-white mt-4">
+                                <x-heroicon-s-arrow-left-on-rectangle class="h-5 w-5 text-white" />
+                                <span>Logout</span>
+                            </button>
+                        </form>
+
                         <!-- Modal Logout -->
                         <div id="logoutModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
                             <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full">

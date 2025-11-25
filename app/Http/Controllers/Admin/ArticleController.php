@@ -160,9 +160,12 @@ class ArticleController extends Controller
     }
 
 
-    public function show(Article $article)
+public function show(Article $article)
 {
     $article->load('category', 'comments.user');
+
+    // Tambah view_count
+    $article->increment('view_count');
 
     $relatedArticles = Article::where('category_id', $article->category_id)
                               ->where('id', '!=', $article->id)
@@ -171,6 +174,7 @@ class ArticleController extends Controller
 
     return view('admin.articles.show', compact('article', 'relatedArticles'));
 }
+
 
     /**
      * Reject artikel
@@ -181,4 +185,25 @@ class ArticleController extends Controller
         return redirect()->route('admin.articles.index')
                          ->with('success', 'Artikel ditolak.');
     }
+
+    public function like(Article $article)
+{
+    $article->increment('like_count');
+    return back()->with('success', 'Artikel disukai!');
+}
+
+public function comment(Request $request, Article $article)
+{
+    $request->validate([
+        'comment_content' => 'required|string|max:1000',
+    ]);
+
+    $article->comments()->create([
+        'user_id' => auth()->id(),
+        'content' => $request->comment_content,
+    ]);
+
+    return back()->with('success', 'Komentar berhasil dikirim!');
+}
+
 }

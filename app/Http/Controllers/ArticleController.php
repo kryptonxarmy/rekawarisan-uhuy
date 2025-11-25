@@ -25,15 +25,78 @@ class ArticleController extends Controller
      * Menampilkan daftar semua artikel.
      * @return \Illuminate\View\View
      */
-    public function index()
-    {
-        // Hanya tampilkan artikel yang sudah diverifikasi (status 'published' atau 'verified')
-        $articles = Article::where('status', 'approved')
-                           ->orderBy('created_at', 'desc')
-                           ->paginate(10);
+public function index(Request $request)
+{
+    // Ambil input filter
+    $search = $request->query('search');
+    $category = $request->query('category');
+    $provinceFilter = $request->query('province');
 
-        return view('frontend.pustakawarisan.index', compact('articles'));
+    // Query artikel utama
+    $articlesQuery = Article::where('status', 'approved');
+
+    // Filter search
+    if ($search) {
+        $articlesQuery->where(function($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")
+              ->orWhere('content', 'like', "%{$search}%");
+        });
     }
+
+    // Filter kategori
+    if ($category) {
+        $articlesQuery->where('category_id', $category);
+    }
+
+    // Filter provinsi
+    if ($provinceFilter) {
+        $articlesQuery->where('province', $provinceFilter);
+    }
+
+    // Ambil hasil dengan pagination
+    $articles = $articlesQuery->orderBy('created_at', 'desc')
+                              ->paginate(10)
+                              ->withQueryString();
+
+    // Budaya dari provinsi user (4 artikel terakhir)
+    $provinceArticles = collect();
+    if (auth()->check() && auth()->user()->province) {
+        $provinceArticles = Article::where('status', 'approved')
+                                   ->where('province', auth()->user()->province)
+                                   ->orderBy('created_at', 'desc')
+                                   ->take(4)
+                                   ->get();
+    }
+
+    // Artikel favorit (4 artikel terbanyak like)
+    $favoriteArticles = Article::where('status', 'approved')
+                               ->orderBy('like_count', 'desc')
+                               ->take(4)
+                               ->get();
+
+    // Artikel rekomendasi berdasarkan kategori artikel terakhir user lihat (4 artikel)
+    $recommendedArticles = collect();
+    if (auth()->check()) {
+        $lastArticle = Article::where('status', 'approved')->latest()->first();
+        if ($lastArticle) {
+            $recommendedArticles = Article::where('status', 'approved')
+                                          ->where('category_id', $lastArticle->category_id)
+                                          ->where('id', '!=', $lastArticle->id)
+                                          ->take(4)
+                                          ->get();
+        }
+    }
+
+    return view('frontend.pustakawarisan.index', compact(
+        'articles', 
+        'provinceArticles', 
+        'favoriteArticles', 
+        'recommendedArticles'
+    ));
+}
+
+
+
 
     /**
      * Menampilkan formulir untuk membuat artikel baru.

@@ -5,6 +5,8 @@ use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JejakMaestroController;
 use App\Http\Controllers\FaktaCepatController;
+use App\Http\Controllers\Admin\ContactController;
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -18,11 +20,12 @@ use Illuminate\Support\Facades\Route;
 // ------------------------------------------------------
 // LANDING PAGE
 // ------------------------------------------------------
+
 Route::get('/', fn() => view('frontend.beranda'))->name('beranda');
 Route::get('/faq', fn() => view('frontend.page.faq'))->name('faq');
 Route::get('/kebijakan-privasi', fn() => view('frontend.page.kebijakan'))->name('kebijakan-privasi');
 Route::get('/contact', fn() => view('frontend.page.contact'))->name('contact');
-
+Route::post('/kontak', [ContactController::class, 'store'])->name('contacts.store');
 
 // ------------------------------------------------------
 // PUSTAKA WARISAN (From pino)
@@ -152,8 +155,8 @@ Route::prefix('admin')->middleware('auth')->as('admin.')->group(function () {
     Route::resource('badges', App\Http\Controllers\Admin\BadgeController::class)->names('badges');
 
     // Lainnya
-    Route::resource('inbox', App\Http\Controllers\Admin\InboxController::class)->only(['index', 'show', 'destroy'])->names('inbox');
-    Route::post('inbox/{message}/mark-read', [App\Http\Controllers\Admin\InboxController::class, 'markAsRead'])->name('inbox.mark-read');
+    Route::resource('inbox', App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy'])->names('inbox');
+    Route::post('inbox/{message}/mark-read', [App\Http\Controllers\Admin\ContactController::class, 'markAsRead'])->name('inbox.mark-read');
 });
 
 

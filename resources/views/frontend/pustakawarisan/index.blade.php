@@ -33,30 +33,81 @@
             </div>
         </div>
 
-        <!-- Search and Filters -->
-        <!-- Menggunakan Form GET agar filter bisa diproses di controller nantinya -->
-        <form action="{{ route('pustakawarisan.index') }}" method="GET" class="flex flex-col md:flex-row gap-4 mb-8">
-            <div class="flex-1">
-                <div class="relative">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari di Pustaka Warisan..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
-                    <button type="submit" class="absolute right-4 top-3 text-gray-400 hover:text-teal-600">
-                        🔍
-                    </button>
-                </div>
+        <!-- Search & Filter -->
+        <form id="filterForm" action="{{ route('pustakawarisan.index') }}" method="GET" class="flex flex-col md:flex-row gap-4 mb-8">
+            <!-- Input Search -->
+            <div class="flex-1 relative">
+                <input 
+                    type="text" 
+                    name="search" 
+                    value="{{ request('search') }}" 
+                    placeholder="Cari di Pustaka Warisan..." 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    id="searchInput"
+                >
+                <button type="submit" class="absolute right-4 top-3 text-gray-400 hover:text-teal-600">
+                    🔍
+                </button>
             </div>
-            <select name="category" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+
+            <!-- Filter Kategori -->
+            <select name="category" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" onchange="document.getElementById('filterForm').submit()">
                 <option value="">Semua Kategori</option>
-                <option value="1">Tarian</option>
-                <option value="2">Musik</option>
-                <option value="3">Kuliner</option>
+                @foreach(App\Models\ArticleCategory::orderBy('name')->get() as $cat)
+                    <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                        {{ $cat->name }}
+                    </option>
+                @endforeach
             </select>
-            <select name="province" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+
+            <!-- Filter Provinsi -->
+            <select name="province" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" onchange="document.getElementById('filterForm').submit()">
                 <option value="">Semua Provinsi</option>
-                <option value="Aceh">Aceh</option>
-                <option value="Jawa Barat">Jawa Barat</option>
-                <option value="Bali">Bali</option>
+                @foreach([
+                'Aceh',
+                'Sumatera Utara',
+                'Sumatera Barat',
+                'Riau',
+                'Jambi',
+                'Sumatera Selatan',
+                'Bengkulu',
+                'Lampung',
+                'Kepulauan Bangka Belitung',
+                'Kepulauan Riau',
+                'DKI Jakarta',
+                'Jawa Barat',
+                'Jawa Tengah',
+                'DI Yogyakarta',
+                'Jawa Timur',
+                'Banten',
+                'Bali',
+                'Nusa Tenggara Barat',
+                'Nusa Tenggara Timur',
+                'Kalimantan Barat',
+                'Kalimantan Tengah',
+                'Kalimantan Selatan',
+                'Kalimantan Timur',
+                'Kalimantan Utara',
+                'Sulawesi Utara',
+                'Sulawesi Tengah',
+                'Sulawesi Selatan',
+                'Sulawesi Tenggara',
+                'Gorontalo',
+                'Sulawesi Barat',
+                'Maluku',
+                'Maluku Utara',
+                'Papua',
+                'Papua Barat'
+            ]
+            as $prov)
+                    <option value="{{ $prov }}" {{ request('province') == $prov ? 'selected' : '' }}>
+                        {{ $prov }}
+                    </option>
+                @endforeach
             </select>
         </form>
+
+
 
         <!-- Artikel Budaya Terbaru (Dinamis dari Controller) -->
         <div class="mb-12">
@@ -106,162 +157,124 @@
         <!-- Budaya Dari Provinsi Anda -->
         <div class="mb-12">
             <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2 inline-block">Budaya Dari Provinsi Anda</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-                <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="relative h-48">
-                        <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                        <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                        <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                    </div>
-                </a>
-                <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="relative h-48">
-                        <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                        <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                        <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                    </div>
-                </a>
-                <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="relative h-48">
-                        <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                        <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                        <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                    </div>
-                </a>
-                <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="relative h-48">
-                        <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                        <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                        <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                    </div>
-                </a>
-            </div>
-            <div class="text-center mt-8">
-                <button class="px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-semibold">Lebih Banyak</button>
-            </div>
-        </div>
-
-        <!-- Artikel Budaya Terbaru -->
-        <div class="mb-12">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2 inline-block">Artikel Budaya Terbaru</h3>
-            <div class="relative">
+            @if($provinceArticles->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-                    <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                        <div class="relative h-48">
-                            <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                            <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                            <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                            <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                        </div>
-                    </a>
-                    <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                        <div class="relative h-48">
-                            <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                            <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                            <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                            <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                        </div>
-                    </a>
-                    <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                        <div class="relative h-48">
-                            <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                            <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                            <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                            <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                        </div>
-                    </a>
-                    <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                        <div class="relative h-48">
-                            <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                            <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                            <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                            <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                        </div>
-                    </a>
+                    @foreach($provinceArticles as $article)
+                        <a href="{{ route('pustakawarisan.detail', $article->id) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="relative h-48">
+                                @if($article->img_url)
+                                    <img src="{{ asset($article->img_url) }}" alt="{{ $article->title }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>
+                                @endif
+                                <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
+                                    {{ $article->category->name ?? 'Budaya' }}
+                                </span>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-gray-800 mb-2 line-clamp-2 uppercase">{{ $article->title }}</h4>
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ Str::limit(strip_tags($article->content), 100) }}</p>
+                                <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
+                            </div>
+                        </a>
+                    @endforeach
                 </div>
-            </div>
+                <div class="text-center mt-8">
+                    <a href="{{ route('pustakawarisan.index') }}?province={{ auth()->user()->province }}" class="px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-semibold">Lebih Banyak</a>
+                </div>
+            @else
+                <div class="text-center py-12 bg-gray-50 rounded-lg">
+                    <p class="text-gray-500">Belum ada artikel untuk provinsi Anda.</p>
+                </div>
+            @endif
         </div>
 
-        <!-- Di rekomendasikan Untukmu -->
+        <!-- Artikel Budaya Terfavorit -->
         <div class="mb-12">
-            <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2 inline-block">Di rekomendasikan Untukmu</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-                <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="relative h-48">
-                        <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                        <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                        <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                    </div>
-                </a>
-                <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="relative h-48">
-                        <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                        <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                        <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                    </div>
-                </a>
-                <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="relative h-48">
-                        <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                        <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                        <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                    </div>
-                </a>
-                <a href="/detail" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="relative h-48">
-                        <img src="{{ asset('images/tari_saman.jpeg') }}" alt="Tari Saman" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">Tarian</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="font-bold text-gray-800 mb-2">TARI SAMAN - BUDAYA SUKU GAYO ACEH</h4>
-                        <p class="text-gray-600 text-sm mb-4">Tari Saman berasal dari daratan Tinggi Gayo di Aceh dan telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda.</p>
-                        <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
-                    </div>
-                </a>
-            </div>
-            <div class="text-center mt-8">
-                <button class="px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-semibold">Lebih Banyak</button>
-            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2 inline-block">Artikel Budaya Terfavorit</h3>
+            @if($favoriteArticles->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                    @foreach($favoriteArticles as $article)
+                        <a href="{{ route('pustakawarisan.detail', $article->id) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="relative h-48">
+                                @if($article->img_url)
+                                    <img src="{{ asset($article->img_url) }}" alt="{{ $article->title }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>
+                                @endif
+                                <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
+                                    {{ $article->category->name ?? 'Budaya' }}
+                                </span>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-gray-800 mb-2 line-clamp-2 uppercase">{{ $article->title }}</h4>
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ Str::limit(strip_tags($article->content), 100) }}</p>
+                                <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-12 bg-gray-50 rounded-lg">
+                    <p class="text-gray-500">Belum ada artikel favorit.</p>
+                </div>
+            @endif
         </div>
+
+        <!-- Di Rekomendasikan Untukmu -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2 inline-block">Di Rekomendasikan Untukmu</h3>
+            @if($recommendedArticles->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                    @foreach($recommendedArticles as $article)
+                        <a href="{{ route('pustakawarisan.detail', $article->id) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="relative h-48">
+                                @if($article->img_url)
+                                    <img src="{{ asset($article->img_url) }}" alt="{{ $article->title }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>
+                                @endif
+                                <span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
+                                    {{ $article->category->name ?? 'Budaya' }}
+                                </span>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-gray-800 mb-2 line-clamp-2 uppercase">{{ $article->title }}</h4>
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ Str::limit(strip_tags($article->content), 100) }}</p>
+                                <button class="text-teal-600 font-semibold hover:text-teal-700">Baca Selengkapnya</button>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+                <div class="text-center mt-8">
+                    <a href="{{ route('pustakawarisan.index') }}" class="px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-semibold">Lebih Banyak</a>
+                </div>
+            @else
+                <div class="text-center py-12 bg-gray-50 rounded-lg">
+                    <p class="text-gray-500">Belum ada rekomendasi untukmu.</p>
+                </div>
+            @endif
+        </div>
+
     </div>
+
+    <script>
+         // Fungsi debounce untuk mencegah submit terlalu cepat
+        function debounce(func, delay) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        const filterForm = document.getElementById('filterForm');
+
+        searchInput.addEventListener('input', debounce(function() {
+            filterForm.submit();
+        }, 200)); // delay 500ms setelah user berhenti mengetik
+    </script>
 @endsection
