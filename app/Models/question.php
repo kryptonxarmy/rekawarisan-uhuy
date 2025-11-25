@@ -5,24 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Kolom:
- * @property int $id                Primary key
- * @property string $question       Pertanyaan
- * @property string $correct_answer Jawaban benar
- * @property \Carbon\Carbon $created_at Waktu dibuat
- */
 class Question extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'quiz_id',
         'question',
-        'correct_answer',
+        'option_a',
+        'option_b',
+        'option_c',
+        'option_d',
+        'correct'
     ];
 
-    protected $casts = [
-        'id' => 'integer',
-        'created_at' => 'datetime',
-    ];
+    public function quiz()
+    {
+        return $this->belongsTo(Quiz::class);
+    }
 }
