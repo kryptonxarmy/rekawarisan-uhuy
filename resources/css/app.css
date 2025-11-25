@@ -1,9 +1,3 @@
-/* ✅ BENAR (GUNAKAN INI) */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Anda BISA @import file CSS lain di sini, 
-  tapi BUKAN library inti Tailwind.
-  Contoh: @import "./components/tombol.css";
-*/

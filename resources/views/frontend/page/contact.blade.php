@@ -3,7 +3,7 @@
  <div class="bg-gray-100 min-h-screen">
     
      <!-- hero section -->
-    <div class="min-h-[30vh] flex flex-col px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
+    <div class="min-h-[30vh] xl:min-h-[25vh] 2xl:min-h-[15vh]  flex flex-col px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
         <div class="container mt-5 p-4 relative z-10">
             <h1 class="text-3xl font-bold text-white tracking-tight">HUBUNGI KAMI</h1>
             <div class="text-sm font-semibold text-white/80 mt-1">
@@ -88,7 +88,7 @@
                 </p>
 
                 <!-- Form -->
-                <form class="space-y-6">
+                <form id="contactForm" class="space-y-6">
                     <!-- Nama -->
                     <div class="group">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
@@ -133,4 +133,33 @@
         </div>
     </main>
 </div>
+
+@push('scripts')
+<script>
+    // Pastikan skrip berjalan setelah semua elemen HTML dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ambil elemen form berdasarkan ID
+        const form = document.getElementById('contactForm');
+        
+        // Pengecekan krusial
+        if (!form) {
+            console.error('ERROR: Form dengan ID "contactForm" tidak ditemukan.');
+            return;
+        }
+
+        // Tambahkan event listener untuk submit
+        form.addEventListener('submit', function(e) {
+            // Mencegah form melakukan submit default (yang menyebabkan refresh instan)
+            e.preventDefault(); 
+            
+            // Tampilkan Notifikasi (Alert)
+            alert("Terima kasih sudah mengirimkan pesan Anda kepada kami. Kami akan membalas pesan Anda dalam waktu 1x24 jam.");
+            
+            // Refresh Halaman: Ini hanya akan dijalankan setelah pengguna menekan 'OK' pada alert.
+            window.location.reload(); 
+        });
+    });
+</script>
+@endpush
+
 @endsection

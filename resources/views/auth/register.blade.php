@@ -350,11 +350,11 @@
       <div class="checkbox-group">
         <input type="checkbox" id="agree" name="agree" required>
         <label for="agree">
-          Dengan menekan <b>Daftar</b>, Anda menyetujui <a href="#">Syarat</a> dan <a href="#">Kebijakan Privasi</a> kami.
+          Dengan menekan <b>Daftar</b>, Anda menyetujui <a href="{{ route('kebijakan-privasi') }}">Syarat</a> dan <a href="{{ route('kebijakan-privasi') }}">Kebijakan Privasi</a> kami.
         </label>
       </div>
 
-      <button type="submit" id="registerButton" class="register-button" disabled>
+      <button type="submit" id="registerButton  class="register-button" disabled>
         Daftar
       </button>
 

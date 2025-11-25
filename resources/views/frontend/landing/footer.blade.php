@@ -24,7 +24,7 @@
             <!-- Brand Section -->
             <div class="lg:col-span-1 space-y-6">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('assets/logo-rekawarisan-white.png') }}" alt="Logo Reka Warisan" class="w-16 h-16 drop-shadow-lg">
+                    <img src="{{ asset('assets/logo-rekawarisan-white.png') }}" alt="Logo Reka Warisan" class="w-16 drop-shadow-lg">
                 </div>
                 <p class="text-gray-200 text-sm leading-relaxed max-w-xs">
                     Jembatan Inovasi Warisan Budaya ke Ekonomi Digital Global. Platform terintegrasi untuk lisensi, kolaborasi, dan literasi digital warisan Nusantara.
@@ -47,7 +47,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="" class="text-gray-300 hover:text-amber-300 transition-all duration-300 flex items-center gap-2 group">
+                        <a href="{{ route('pustakawarisan.index') }}" class="text-gray-300 hover:text-amber-300 transition-all duration-300 flex items-center gap-2 group">
                             <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
@@ -110,7 +110,7 @@
                         Dapatkan update terbaru tentang fitur, event, dan konten eksklusif warisan budaya.
                     </p>
                     
-                    <form class="space-y-4">
+                    <form  id="newsletterForm" class="space-y-4">
                         <div class="relative group">
                             <input type="email" placeholder="Masukkan alamat email Anda" 
                                    class="w-full p-4 pl-12 text-sm bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl placeholder-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-white transition-all duration-300 group-hover:bg-white/15"
@@ -150,22 +150,22 @@
             <div class="flex items-center gap-6">
                 <span class="text-sm text-gray-400 hidden md:block">Follow Us:</span>
                 <div class="flex space-x-5">
-                    <a href="#" class="w-10 h-10 bg-white/10 hover:bg-amber-500 rounded-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group">
+                    <a href="https://www.facebook.com" class="w-10 h-10 bg-white/10 hover:bg-amber-500 rounded-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group">
                         <svg class="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.563V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
                         </svg>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 hover:bg-blue-500 rounded-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group">
+                    <a href="https://www.youtube.com" class="w-10 h-10 bg-white/10 hover:bg-blue-500 rounded-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group">
                         <svg class="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
                         </svg>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 hover:bg-pink-500 rounded-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group">
+                    <a href="https://www.pinterest.com" class="w-10 h-10 bg-white/10 hover:bg-pink-500 rounded-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group">
                         <svg class="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.012.017 12.017 0z"/>
                         </svg>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 hover:bg-blue-400 rounded-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group">
+                    <a href="https://www.linkedin.com" class="w-10 h-10 bg-white/10 hover:bg-blue-400 rounded-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group">
                         <svg class="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                         </svg>
@@ -201,3 +201,30 @@
     transition-duration: 300ms;
     }
 </style>
+
+<script>
+    // Pastikan skrip berjalan setelah semua elemen HTML dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ambil elemen form berdasarkan ID
+        const form = document.getElementById('newsletterForm');
+        
+        // Pengecekan krusial
+        if (!form) {
+            console.error('ERROR: Form dengan ID "contactForm" tidak ditemukan.');
+            return;
+        }
+
+        // Tambahkan event listener untuk submit
+        form.addEventListener('submit', function(e) {
+            // Mencegah form melakukan submit default (yang menyebabkan refresh instan)
+            e.preventDefault(); 
+            
+            // Tampilkan Notifikasi (Alert)
+            // Menggunakan gaya Antusias & Modern
+            alert("Berhasil! Terima kasih telah mendaftar di Reka Warisan. Bersiaplah, karena kami akan segera mengirimkan inspirasi dan berita terhangat langsung ke email Anda!");
+                        
+            // Refresh Halaman: Ini hanya akan dijalankan setelah pengguna menekan 'OK' pada alert.
+            window.location.reload(); 
+        });
+    });
+</script>

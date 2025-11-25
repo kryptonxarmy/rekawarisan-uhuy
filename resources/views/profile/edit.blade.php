@@ -24,8 +24,8 @@
                     Kembali
                 </a>
 
-                {{-- Tombol Edit --}}
-                <button onclick="document.getElementById('profile-section').scrollIntoView()"
+                {{-- Tombol Edit (Scroll ke form) --}}
+                <button onclick="document.getElementById('profile-section').scrollIntoView({behavior: 'smooth'})"
                     class="absolute top-6 right-6 bg-white text-teal-600 px-4 py-2 text-sm rounded-lg hover:bg-gray-100 transition flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -45,14 +45,14 @@
                         </svg>
                     </div>
 
-                    <h2 class="text-2xl font-semibold mt-4">{{ Auth::user()->name ?? 'Rifa Pino Dan Kawan' }}</h2>
-                    <p class="text-teal-100">{{ Auth::user()->email ?? 'pino@email.com' }}</p>
-                    <p class="text-teal-100 text-sm mt-1">{{ Auth::user()->username ?? 'joko_w' }}</p>
+                    <h2 class="text-2xl font-semibold mt-4">{{ Auth::user()->name }}</h2>
+                    <p class="text-teal-100">{{ Auth::user()->email }}</p>
+                    <p class="text-teal-100 text-sm mt-1">{{ Auth::user()->username ?? '-' }}</p>
                 </div>
             </div>
 
             {{-- Bagian Form --}}
-            <div id="profile-section" class="px-8 py-10 space-y-10">
+            <div class="px-8 py-10 space-y-10">
 
                 {{-- INFORMASI PRIBADI --}}
                 <div>
@@ -65,32 +65,24 @@
                         Informasi Pribadi
                     </h3>
 
-                    {{-- Tampilkan Data Profil --}}
+                    {{-- Tampilkan Data Profil (Read Only) --}}
                     <div class="bg-teal-50 p-6 rounded-lg shadow-sm mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <h4 class="font-medium text-gray-700 mb-2">Nama Lengkap</h4>
-                                <p class="text-gray-900">{{ Auth::user()->name ?? 'Rifa Pino Dan Kawan' }}</p>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-gray-700 mb-2">No. HP</h4>
-                                <p class="text-gray-900">{{ Auth::user()->phone ?? '081234567890' }}</p>
+                                <p class="text-gray-900">{{ Auth::user()->name }}</p>
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-700 mb-2">Email</h4>
-                                <p class="text-gray-900">{{ Auth::user()->email ?? 'pino@email.com' }}</p>
+                                <p class="text-gray-900">{{ Auth::user()->email }}</p>
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-700 mb-2">Username</h4>
-                                <p class="text-gray-900">{{ Auth::user()->username ?? 'joko_w' }}</p>
+                                <p class="text-gray-900">{{ Auth::user()->username ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
 
-                    {{-- Form Update Profil --}}
-                    <div class="bg-white p-6 rounded-lg shadow-sm border border-teal-100">
-                        @include('profile.partials.update-profile-information-form')
-                    </div>
                 </div>
 
                 {{-- INFORMASI LOKASI --}}
@@ -103,31 +95,28 @@
                         Informasi Lokasi
                     </h3>
 
-                    {{-- Tampilkan Data Lokasi --}}
+                    {{-- Tampilkan Data Lokasi (Read Only) --}}
                     <div class="bg-teal-50 p-6 rounded-lg shadow-sm">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
                                 <h4 class="font-medium text-gray-700 mb-2">Provinsi</h4>
-                                <p class="text-gray-900">{{ Auth::user()->province ?? 'Jawa Tengah' }}</p>
+                                <p class="text-gray-900">{{ Auth::user()->province ?? '-' }}</p>
                             </div>
                             <div>
-                                <h4 class="font-medium text-gray-700 mb-2">Kota/Kabupaten</h4>
-                                <p class="text-gray-900">{{ Auth::user()->city ?? 'Solo' }}</p>
+                                <h4 class="font-medium text-gray-700 mb-2">Kabupaten/Kota</h4>
+                                <p class="text-gray-900">{{ Auth::user()->regency ?? '-' }}</p>
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-700 mb-2">Kecamatan</h4>
-                                <p class="text-gray-900">{{ Auth::user()->district ?? 'Banjarsari' }}</p>
+                                <p class="text-gray-900">{{ Auth::user()->district ?? '-' }}</p>
                             </div>
-                            <div>
-                                <h4 class="font-medium text-gray-700 mb-2">Desa/Kelurahan</h4>
-                                <p class="text-gray-900">{{ Auth::user()->village ?? 'Kadipiro' }}</p>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <h4 class="font-medium text-gray-700 mb-2">Alamat Lengkap</h4>
-                            <p class="text-gray-900">{{ Auth::user()->address ?? 'Desa Kadipiro, Kec. Banjarsari, Solo, Jawa Tengah' }}</p>
                         </div>
                     </div>
+                </div>
+
+                {{-- Form Update Profil --}}
+                <div id="profile-section" class="bg-white p-6 rounded-lg shadow-sm border border-teal-100">
+                    @include('profile.partials.update-profile-information-form')
                 </div>
 
                 {{-- GANTI PASSWORD --}}
@@ -165,4 +154,5 @@
 
             </div>
         </div>
+    </div>
 </x-app-layout>

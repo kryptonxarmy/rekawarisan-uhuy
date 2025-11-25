@@ -5,7 +5,7 @@
  <div class="bg-gray-50 min-h-screen">
     
       <!-- hero section -->
-    <div class="min-h-[30vh] flex flex-col px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
+    <div class="min-h-[30vh] xl:min-h-[25vh] 2xl:min-h-[15vh] flex flex-col px-6 pt-20 **mt-[-5rem]**" style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; ">
         <div class="container mt-5 p-4 relative z-10">
             
             <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3">
