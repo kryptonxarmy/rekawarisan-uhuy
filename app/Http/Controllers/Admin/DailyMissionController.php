@@ -41,7 +41,7 @@ class DailyMissionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'date' => 'required|date|unique:daily_missions,date',
+            'created_at' => 'required|date|unique:daily_missions,date',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             
@@ -68,7 +68,7 @@ class DailyMissionController extends Controller
             // 1. Create Daily Mission (Master Data)
             // DISINI PERUBAHAN UTAMANYA: Kita simpan XP ke tabel induk juga
             $dailyMission = DailyMission::create([
-                'date'        => $request->created_at,
+                'created_at' => $request->date,
                 'title'       => $request->title,
                 'description' => $request->description,
                 'user_id'     => auth()->id(),
