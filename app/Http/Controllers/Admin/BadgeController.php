@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Badge;
+use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class BadgeController extends Controller
 {
@@ -12,43 +15,9 @@ class BadgeController extends Controller
      */
     public function index()
     {
-        // For now, returning dummy data for UI development
-        $badges = collect([
-            (object) [
-                'id' => 1,
-                'name' => 'Pemula Budaya',
-                'description' => 'Badge untuk pengguna yang telah menyelesaikan misi pertama',
-                'icon' => 'star',
-                'color' => '#10B981',
-                'requirements' => 'Selesaikan 1 misi harian',
-                'xp_reward' => 50,
-                'users_count' => 245,
-                'created_at' => now()->subDays(30),
-            ],
-            (object) [
-                'id' => 2,
-                'name' => 'Pelestari Warisan',
-                'description' => 'Badge untuk pengguna yang aktif membaca artikel warisan',
-                'icon' => 'book-open',
-                'color' => '#3B82F6',
-                'requirements' => 'Baca 10 artikel warisan budaya',
-                'xp_reward' => 100,
-                'users_count' => 156,
-                'created_at' => now()->subDays(25),
-            ],
-            (object) [
-                'id' => 3,
-                'name' => 'Maestro Jejak',
-                'description' => 'Badge untuk pengguna yang menyelesaikan semua misi dalam sebulan',
-                'icon' => 'trophy',
-                'color' => '#F59E0B',
-                'requirements' => 'Selesaikan 30 misi harian berturut-turut',
-                'xp_reward' => 500,
-                'users_count' => 23,
-                'created_at' => now()->subDays(15),
-            ],
-        ]);
-
+        // Mengambil semua badge dan menghitung jumlah user yang memilikinya
+        $badges = Badge::withCount('users')->get(); 
+        
         return view('admin.badges.index', compact('badges'));
     }
 
@@ -65,19 +34,41 @@ class BadgeController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO: Implement badge creation logic
-        
-        return redirect()->route('admin.badges.index')
-            ->with('success', 'Badge berhasil dibuat');
-    }
+        // 1. Validasi Input
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:badges,name',
+            'description' => 'required|string',
+            'points_requirement' => 'required|integer|min:0', 
+            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048', 
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        // TODO: Show specific badge
-        return view('admin.badges.show');
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('badges', 'public');
+        }
+
+        // 2. Simpan Badge Baru ke Database
+        $badge = Badge::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'points_requirement' => $validated['points_requirement'],
+            'image' => $imagePath, 
+        ]);
+
+        // 3. LOGIKA OTOMATIS: Berikan Badge ke User yang SUDAH Memenuhi Syarat (Retroaktif)
+        $eligibleUsers = User::where('points', '>=', $badge->points_requirement)->get();
+
+        $awardedCount = 0;
+        if ($eligibleUsers->isNotEmpty()) {
+            foreach ($eligibleUsers as $user) {
+                $user->badges()->syncWithoutDetaching([$badge->id]);
+                $awardedCount++;
+            }
+        }
+        
+        // 4. Redirect
+        return redirect()->route('admin.badges.index')
+            ->with('success', "Badge '{$badge->name}' berhasil dibuat dan diberikan kepada {$awardedCount} user yang telah memenuhi syarat.");
     }
 
     /**
@@ -85,8 +76,8 @@ class BadgeController extends Controller
      */
     public function edit(string $id)
     {
-        // TODO: Show edit form
-        return view('admin.badges.edit');
+        $badge = Badge::findOrFail($id);
+        return view('admin.badges.edit', compact('badge'));
     }
 
     /**
@@ -94,10 +85,46 @@ class BadgeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // TODO: Update badge logic
-        
+        $badge = Badge::findOrFail($id);
+
+        // 1. Validasi Input
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:badges,name,' . $badge->id, 
+            'description' => 'required|string', 
+            'points_requirement' => 'required|integer|min:0', 
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', 
+        ]);
+
+        $updateData = [
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'points_requirement' => $validated['points_requirement'],
+        ];
+
+        // 2. Logika Update Gambar
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama (jika ada) dan upload gambar baru
+            if ($badge->image && !str_contains($badge->image, 'assets/') && Storage::disk('public')->exists($badge->image)) {
+                 Storage::disk('public')->delete($badge->image);
+            }
+            $updateData['image'] = $request->file('image')->store('badges', 'public');
+        } 
+
+        // 3. Update data badge (PENTING: Pastikan ini berjalan sebelum re-evaluasi)
+        $badge->update($updateData);
+
+        // 4. LOGIKA RE-EVALUASI (PEMBERIAN & PENCABUTAN)
+        // Ambil ID semua user yang memenuhi syarat BARU (termasuk yang tidak memenuhi syarat lagi)
+        $eligibleUserIds = User::where('points', '>=', $badge->points_requirement)->pluck('id')->toArray();
+
+        // sync() akan mencabut dari yang tidak eligible dan memasang ke yang eligible
+        $badge->users()->sync($eligibleUserIds); 
+
+        $awardedCount = count($eligibleUserIds);
+
+        // 5. Redirect
         return redirect()->route('admin.badges.index')
-            ->with('success', 'Badge berhasil diupdate');
+            ->with('success', "Badge '{$badge->name}' berhasil diupdate. Saat ini, {$awardedCount} user telah memenuhi syarat.");
     }
 
     /**
@@ -105,9 +132,16 @@ class BadgeController extends Controller
      */
     public function destroy(string $id)
     {
-        // TODO: Delete badge logic
+        $badge = Badge::findOrFail($id);
+
+        // Hapus gambar dari storage (hanya yang diupload, bukan yang static assets)
+        if ($badge->image && !str_contains($badge->image, 'assets/') && Storage::disk('public')->exists($badge->image)) {
+            Storage::disk('public')->delete($badge->image);
+        }
+
+        $badge->delete();
         
         return redirect()->route('admin.badges.index')
-            ->with('success', 'Badge berhasil dihapus');
+            ->with('success', 'Badge berhasil dihapus.');
     }
 }

@@ -1,141 +1,120 @@
 <?php
 
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\MissionController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\JejakMaestroController;
-use App\Http\Controllers\FaktaCepatController;
-use App\Http\Controllers\Admin\ContactController;
-
-
 use Illuminate\Support\Facades\Route;
 
+// --- CONTROLLERS FRONTEND ---
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\JejakMaestroController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\Admin\ContactController;
+
+// --- CONTROLLERS ADMIN ---
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\DailyMissionController as AdminDailyMissionController;
+use App\Http\Controllers\Admin\ArticleCategoryController;
+use App\Http\Controllers\Admin\FaktaCepatController as AdminFaktaCepatController;
+use App\Http\Controllers\Admin\LeaderboardController;
+use App\Http\Controllers\Admin\BadgeController;
+use App\Http\Controllers\AuthController; // Jika pakai custom auth controller
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes (Halaman Publik)
+| Web Routes (Halaman Publik & User)
 |--------------------------------------------------------------------------
 */
 
-// ------------------------------------------------------
-// LANDING PAGE
-// ------------------------------------------------------
-
+// 1. LANDING PAGE & HALAMAN STATIS
 Route::get('/', fn() => view('frontend.beranda'))->name('beranda');
 Route::get('/faq', fn() => view('frontend.page.faq'))->name('faq');
 Route::get('/kebijakan-privasi', fn() => view('frontend.page.kebijakan'))->name('kebijakan-privasi');
 Route::get('/contact', fn() => view('frontend.page.contact'))->name('contact');
 Route::post('/kontak', [ContactController::class, 'store'])->name('contacts.store');
 
-// ------------------------------------------------------
-// PUSTAKA WARISAN (From pino)
-// ------------------------------------------------------
 
+// 2. PUSTAKA WARISAN (ARTIKEL)
 Route::get('/pustaka-warisan', [ArticleController::class, 'index'])->name('pustakawarisan.index');
+Route::get('/pustaka-warisan/detail/{id}', [ArticleController::class, 'show'])->name('pustakawarisan.detail');
+Route::get('/pustaka-warisan/{slug}', [ArticleController::class, 'show'])->name('pustakawarisan.show');
 
-Route::get('/pustaka-warisan/detail', function () {
-    return view('frontend.pustakawarisan.detail');
-})->name('pustakawarisan.detail');
-
-Route::middleware(['auth', 'points:150'])->group(function () {
+// Aksi User di Artikel (Butuh Login)
+Route::middleware(['auth'])->group(function () {
+    // Create Artikel (Syarat Poin 150 - Opsional jika mau diaktifkan lagi, uncomment middleware points)
+    // Route::middleware('points:150')->group(function() { ... });
+    
     Route::get('/pustaka-warisan/create', [ArticleController::class, 'create'])->name('pustakawarisan.create');
     Route::post('/pustaka-warisan', [ArticleController::class, 'store'])->name('pustakawarisan.store');
+    Route::post('/pustaka-warisan/upload-image', [ArticleController::class, 'uploadImage'])->name('pustakawarisan.upload_image');
 
-    Route::post('/pustaka-warisan/upload-image', [ArticleController::class, 'uploadImage'])
-        ->name('pustakawarisan.upload_image');
+    // Like & Comment
+    Route::post('/pustaka-warisan/{id}/like', [ArticleController::class, 'like'])->name('articles.like');
+    Route::post('/pustaka-warisan/{id}/comment', [ArticleController::class, 'comment'])->name('articles.comment');
 });
 
-Route::prefix('pustaka-warisan')->group(function () {
 
-    // CRUD Resource
-    Route::resource('/', ArticleController::class)
-        ->parameters(['' => 'article'])
-        ->names('articles');
+// 3. JEJAK MAESTRO (MISI HARIAN & GAMIFIKASI)
+// Halaman Utama Jejak Maestro
+Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])->name('jejak.maestro');
 
-    Route::get('/', [ArticleController::class, 'index'])->name('pustakawarisan.index');
-    Route::get('/create', [ArticleController::class, 'create'])->name('pustakawarisan.create');
-
-    Route::post('/upload-image', [ArticleController::class, 'uploadImage'])
-        ->name('articles.uploadImage')
-        ->middleware('auth');
-
-    Route::post('/{id}/like', [ArticleController::class, 'like'])
-        ->name('articles.like')
-        ->middleware('auth');
-
-    Route::post('/{id}/comment', [ArticleController::class, 'comment'])
-        ->name('articles.comment')
-        ->middleware('auth');
-});
-
-Route::get('/pustaka-warisan/detail/{id}', [ArticleController::class, 'show'])
-    ->name('pustakawarisan.detail');
-
-Route::get('/pustaka-warisan/{slug}', [ArticleController::class, 'show'])
-    ->name('pustakawarisan.show');
-
-
-// ------------------------------------------------------
-// JEJAK MAESTRO
-// ------------------------------------------------------
-Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])->name('jejakmaestro');
-
-// JEJAK MAESTRO ACTIONS (Auth + Verified)
+// Aksi Misi (Login & Verified)
 Route::middleware(['auth', 'verified'])->group(function () {
     
-    // --- DASHBOARD ---
+    // --- AKSI SELESAIKAN MISI ---
+    // Misi Baca
+    Route::post('/jejak-maestro/complete-read', [JejakMaestroController::class, 'completeRead'])->name('mission.complete.read');
+    // Misi Share
+    Route::post('/jejak-maestro/complete-share', [JejakMaestroController::class, 'completeShare'])->name('mission.complete.share');
+    // Misi Kuis (Simpan Skor)
+    Route::post('/jejak-maestro/complete-quiz', [JejakMaestroController::class, 'completeQuiz'])->name('mission.complete.quiz');
+
+    // --- QUIZ PLAYER (GAMEPLAY) ---
+    // Route ini dipanggil saat tombol "Kerjakan Kuis" diklik
+    // Menggunakan QuizController untuk logika permainan, tapi JejakMaestroController untuk simpan data
+    Route::get('/quiz/play', [QuizController::class, 'play'])->name('quiz.play');
+
+    // Route Dashboard User (Opsional, jika ada dashboard terpisah)
     Route::get('/dashboard', function () {
-        return view('admin.dashboard');
+        return view('dashboard'); 
     })->name('dashboard');
-
-    Route::post('/mission/complete/read', [JejakMaestroController::class, 'completeRead'])->name('mission.complete.read');
-    Route::post('/mission/complete/share', [JejakMaestroController::class, 'completeShare'])->name('mission.complete.share');
-    Route::post('/mission/complete/quiz',  [JejakMaestroController::class, 'completeQuiz'])->name('mission.complete.quiz');
-
-    // Reset Misi (untuk debugging)
-    Route::get('/reset-error-misi', [JejakMaestroController::class, 'resetMisiHariIni']);
 });
 
 
-// ------------------------------------------------------
-// PROFILE
-// ------------------------------------------------------
+// 4. PROFILE USER
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Untuk user submit artikel
-Route::post('/articles/store-user', [ArticleController::class, 'store'])
-     ->name('user.articles.store')
-     ->middleware('auth');
 
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
 
-// ARTIKEL
-// Enduser
-Route::resource('articles', ArticleController::class);
+// Login Admin Khusus (Jika terpisah)
+Route::get('admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('admin/login', [AuthController::class, 'login']);
+Route::post('admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
-// Admin
-Route::prefix('admin')->middleware('auth')->as('admin.')->group(function () {
-    // Dashboard
+// Group Admin
+Route::prefix('admin')->middleware(['auth'])->as('admin.')->group(function () { // Tambahkan middleware admin jika ada role check
+
+    // Dashboard Admin
     Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
-    // Redirect /admin -> /admin/dashboard
     Route::get('/', function () { return redirect()->route('admin.dashboard'); })->name('home');
 
-    // Kelola Pustaka
-    Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class)->names('articles');
-    Route::post('articles/{article}/approve', [App\Http\Controllers\Admin\ArticleController::class, 'approve'])->name('articles.approve');
-    Route::post('articles/{article}/reject', [App\Http\Controllers\Admin\ArticleController::class, 'reject'])->name('articles.reject');
+    // Kelola Artikel (Pustaka Warisan)
+    Route::resource('articles', AdminArticleController::class)->names('articles');
+    Route::post('articles/{article}/approve', [AdminArticleController::class, 'approve'])->name('articles.approve');
+    Route::post('articles/{article}/reject', [AdminArticleController::class, 'reject'])->name('articles.reject');
 
-    // Kategori Warisan
-    Route::resource('categories', App\Http\Controllers\Admin\ArticleCategoryController::class)->names('categories');
+    // Kategori Artikel
+    Route::resource('categories', ArticleCategoryController::class)->names('categories');
 
-    // Jejak Maestro (Old System)
-    Route::resource('missions', App\Http\Controllers\Admin\MissionController::class)->names('missions');
-
-    // Daily Missions (New System)
-    Route::resource('daily-missions', App\Http\Controllers\Admin\DailyMissionController::class)->names([
+    // Daily Missions (Misi Harian - New System)
+    Route::resource('daily-missions', AdminDailyMissionController::class)->names([
         'index' => 'daily-missions.index',
         'create' => 'daily-missions.create',
         'store' => 'daily-missions.store',
@@ -146,42 +125,17 @@ Route::prefix('admin')->middleware('auth')->as('admin.')->group(function () {
     ])->parameters(['daily-missions' => 'dailyMission']);
 
     // Fakta Cepat
-    Route::resource('fakta-cepat', App\Http\Controllers\Admin\FaktaCepatController::class)->names('fakta-cepat');
-    Route::post('fakta-cepat/{faktaCepat}/approve', [App\Http\Controllers\Admin\FaktaCepatController::class, 'approve'])->name('fakta-cepat.approve');
-    Route::post('fakta-cepat/{faktaCepat}/reject', [App\Http\Controllers\Admin\FaktaCepatController::class, 'reject'])->name('fakta-cepat.reject');
+    Route::resource('fakta-cepat', AdminFaktaCepatController::class)->names('fakta-cepat');
+    Route::post('fakta-cepat/{faktaCepat}/approve', [AdminFaktaCepatController::class, 'approve'])->name('fakta-cepat.approve');
+    Route::post('fakta-cepat/{faktaCepat}/reject', [AdminFaktaCepatController::class, 'reject'])->name('fakta-cepat.reject');
 
-    // Leaderboard & Badges
-    Route::resource('leaderboard', App\Http\Controllers\Admin\LeaderboardController::class)->only(['index']);
-    Route::resource('badges', App\Http\Controllers\Admin\BadgeController::class)->names('badges');
+    // Leaderboard & Badge Management
+    Route::resource('leaderboard', LeaderboardController::class)->only(['index']);
+    Route::resource('badges', BadgeController::class)->names('badges');
 
-    // Lainnya
-    Route::resource('inbox', App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy'])->names('inbox');
-    Route::post('inbox/{message}/mark-read', [App\Http\Controllers\Admin\ContactController::class, 'markAsRead'])->name('inbox.mark-read');
+    // Inbox / Kontak
+    Route::resource('inbox', ContactController::class)->only(['index', 'show', 'destroy'])->names('inbox');
+    Route::post('inbox/{message}/mark-read', [ContactController::class, 'markAsRead'])->name('inbox.mark-read');
 });
-
-
-Route::middleware('auth')->group(function () {
-    // Old missions (will be deprecated)
-    Route::resource('missions', MissionController::class);
-    Route::get('missions/{mission}/articles', [MissionController::class, 'missionArticles']);
-    Route::get('missions/{mission}/progress/{user}', [MissionController::class, 'userProgress']);
-    Route::get('missions/{missionProgress}/article-progress/{missionArticle}', [MissionController::class, 'articleProgress']);
-
-    // New Daily Missions
-    Route::get('daily-missions', [App\Http\Controllers\DailyMissionController::class, 'index'])->name('daily-missions.index');
-    Route::get('daily-missions/history', [App\Http\Controllers\DailyMissionController::class, 'history'])->name('daily-missions.history');
-    Route::get('daily-missions/{date}', [App\Http\Controllers\DailyMissionController::class, 'show'])->name('daily-missions.show');
-    Route::post('daily-missions/start-reading', [App\Http\Controllers\DailyMissionController::class, 'startReading'])->name('daily-missions.start-reading');
-    Route::post('daily-missions/complete-reading', [App\Http\Controllers\DailyMissionController::class, 'completeReading'])->name('daily-missions.complete-reading');
-    Route::post('daily-missions/complete-engage', [App\Http\Controllers\DailyMissionController::class, 'completeEngage'])->name('daily-missions.complete-engage');
-    Route::post('daily-missions/start-quiz', [App\Http\Controllers\DailyMissionController::class, 'startQuiz'])->name('daily-missions.start-quiz');
-    Route::post('daily-missions/submit-quiz', [App\Http\Controllers\DailyMissionController::class, 'submitQuiz'])->name('daily-missions.submit-quiz');
-});
-
-
-Route::get('admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
-Route::post('admin/login', [AuthController::class, 'login']);
-Route::post('admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 require __DIR__.'/auth.php';
-

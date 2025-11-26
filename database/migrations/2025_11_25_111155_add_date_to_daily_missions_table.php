@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('daily_missions', function (Blueprint $table) {
-            // Tambahkan kolom date, nullable supaya tidak error
-            $table->date('date')->nullable()->after('id');
+            // Cegah error kalau kolom sudah ada
+            if (!Schema::hasColumn('daily_missions', 'date')) {
+                $table->date('date')->nullable()->after('id');
+            }
         });
     }
 
@@ -23,7 +25,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('daily_missions', function (Blueprint $table) {
-            $table->dropColumn('date');
+            if (Schema::hasColumn('daily_missions', 'date')) {
+                $table->dropColumn('date');
+            }
         });
     }
 };

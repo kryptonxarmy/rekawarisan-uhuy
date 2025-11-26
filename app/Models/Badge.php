@@ -12,14 +12,15 @@ class Badge extends Model
     protected $fillable = [
         'name',
         'description',
-        'image', // tambahkan image
-        'points_requirement',
+        'image', 
+        'points_requirement', 
     ];
 
     protected $casts = [
         'id' => 'integer',
         'points_requirement' => 'integer',
         'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function users()

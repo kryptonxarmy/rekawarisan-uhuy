@@ -65,14 +65,19 @@ class DailyMissionController extends Controller
         ]);
 
         DB::transaction(function () use ($request) {
-            // Create Daily Mission
+            // 1. Create Daily Mission (Master Data)
+            // DISINI PERUBAHAN UTAMANYA: Kita simpan XP ke tabel induk juga
             $dailyMission = DailyMission::create([
-                'date' => $request->date,
-                'title' => $request->title,
+                'date'        => $request->date,
+                'title'       => $request->title,
                 'description' => $request->description,
+                'user_id'     => auth()->id(),
+                'xp_read'     => $request->read_xp_reward,   // Simpan XP Baca ke Master
+                'xp_engage'   => $request->engage_xp_reward, // Simpan XP Share ke Master
+                'xp_quiz'     => $request->quiz_xp_reward,   // Simpan XP Kuis ke Master
             ]);
 
-            // Create Read Task
+            // 2. Create Read Task (Detail Task)
             $readTask = DailyMissionTask::create([
                 'daily_mission_id' => $dailyMission->id,
                 'type' => 'read',
@@ -87,7 +92,7 @@ class DailyMissionController extends Controller
                 'article_id' => $request->read_article_id,
             ]);
 
-            // Create Engage Task (like & comment)
+            // 3. Create Engage Task (Detail Task)
             $engageTask = DailyMissionTask::create([
                 'daily_mission_id' => $dailyMission->id,
                 'type' => 'engage',
@@ -95,13 +100,12 @@ class DailyMissionController extends Controller
                 'required_count' => $request->engage_required_count,
             ]);
 
-            // Link the same article to engage task
             DailyMissionTaskArticle::create([
                 'task_id' => $engageTask->id,
                 'article_id' => $request->read_article_id,
             ]);
 
-            // Create Quiz Task
+            // 4. Create Quiz Task (Detail Task)
             $quizTask = DailyMissionTask::create([
                 'daily_mission_id' => $dailyMission->id,
                 'type' => 'quiz',
@@ -109,7 +113,7 @@ class DailyMissionController extends Controller
                 'required_count' => count($request->quiz_questions),
             ]);
 
-            // Create Quiz Questions
+            // Create Quiz Questions & Options
             foreach ($request->quiz_questions as $questionData) {
                 $quiz = DailyMissionQuiz::create([
                     'task_id' => $quizTask->id,
@@ -117,7 +121,6 @@ class DailyMissionController extends Controller
                     'explanation' => $questionData['explanation'] ?? null,
                 ]);
 
-                // Create Quiz Options
                 foreach ($questionData['options'] as $optionData) {
                     DailyMissionQuizOption::create([
                         'quiz_id' => $quiz->id,
@@ -191,14 +194,20 @@ class DailyMissionController extends Controller
         ]);
 
         DB::transaction(function () use ($request, $dailyMission) {
-            // Update Daily Mission
+            // 1. Update Daily Mission
+            // DISINI JUGA KITA UPDATE NILAI XP DI TABEL UTAMA
             $dailyMission->update([
-                'date' => $request->date,
-                'title' => $request->title,
+                'date'        => $request->date,
+                'title'       => $request->title,
                 'description' => $request->description,
+                'user_id'     => auth()->id(),
+                'xp_read'     => $request->read_xp_reward,   // Update XP Baca
+                'xp_engage'   => $request->engage_xp_reward, // Update XP Share
+                'xp_quiz'     => $request->quiz_xp_reward,   // Update XP Kuis
             ]);
 
-            // Delete existing tasks and recreate
+            // 2. Delete existing tasks and recreate (Strategi Reset)
+            // Hapus detail task lama
             $dailyMission->tasks()->delete();
 
             // Recreate Read Task
@@ -236,7 +245,6 @@ class DailyMissionController extends Controller
                 'required_count' => count($request->quiz_questions),
             ]);
 
-            // Recreate Quiz Questions
             foreach ($request->quiz_questions as $questionData) {
                 $quiz = DailyMissionQuiz::create([
                     'task_id' => $quizTask->id,

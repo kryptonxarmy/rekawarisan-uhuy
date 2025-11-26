@@ -1,14 +1,28 @@
 @extends('admin.AdminLayout')
 
 @section('content')
+    {{-- Helper PHP untuk mengambil data Task spesifik agar kode HTML lebih bersih --}}
+    @php
+        $readTask = $dailyMission->tasks->where('type', 'read')->first();
+        $engageTask = $dailyMission->tasks->where('type', 'engage')->first();
+        $quizTask = $dailyMission->tasks->where('type', 'quiz')->first();
+        // Ambil questions jika ada, decode dari JSON column (asumsi struktur penyimpanan JSON)
+        // Atau jika menggunakan relation hasMany questions, sesuaikan ($quizTask->questions)
+        // Di sini saya asumsikan relation atau properti aksesibel
+        $existingQuestions = $quizTask ? $quizTask->questions : collect([]); 
+    @endphp
+
     <div class="max-w-4xl mx-auto">
         <div class="flex items-center space-x-4 mb-8">
-            <a href="{{ route('admin.daily-missions.show', $dailyMission) }}" class="text-gray-500 hover:text-gray-700">
+            <a href="{{ route('admin.daily-missions.index') }}" class="text-gray-500 hover:text-gray-700">
                 <x-heroicon-s-arrow-left class="h-6 w-6" />
             </a>
             <div>
                 <h1 class="text-3xl font-bold text-[#0F766E]">Edit Misi Harian</h1>
-                <p class="text-gray-600">Edit misi untuk tanggal: <span class="font-semibold">{{ $dailyMission->date->format('d F Y') }}</span></p>
+                <p class="text-gray-600">
+                    Edit detail misi, task, dan kuis untuk tanggal: 
+                    <span class="font-semibold">{{ $dailyMission->date?->format('d F Y') }}</span>
+                </p>
             </div>
         </div>
 
@@ -27,15 +41,15 @@
                 @csrf
                 @method('PUT')
 
-                <!-- Basic Daily Mission Info -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                     <div>
                         <label for="date" class="block text-sm font-semibold text-gray-700 mb-2">
                             Tanggal Misi *
                         </label>
-                        <input type="date" id="date" name="date" value="{{ old('date', $dailyMission->date->format('Y-m-d')) }}"
+                        <input type="date" id="date" name="date" 
+                            value="{{ old('date', $dailyMission->date?->format('Y-m-d')) }}"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E] @error('date') border-red-500 @enderror"
-                            required min="{{ now()->format('Y-m-d') }}">
+                            required>
                         @error('date')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -45,7 +59,8 @@
                         <label for="title" class="block text-sm font-semibold text-gray-700 mb-2">
                             Judul Misi *
                         </label>
-                        <input type="text" id="title" name="title" value="{{ old('title', $dailyMission->title) }}"
+                        <input type="text" id="title" name="title" 
+                            value="{{ old('title', $dailyMission->title) }}"
                             placeholder="Contoh: Jelajahi Budaya Nusantara"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E] @error('title') border-red-500 @enderror"
                             required>
@@ -70,14 +85,6 @@
 
                 <hr class="my-8">
 
-                @php
-                    $readTask = $dailyMission->readTask;
-                    $engageTask = $dailyMission->engageTask;
-                    $quizTask = $dailyMission->quizTask;
-                    $selectedArticle = $readTask?->articles?->first()?->article;
-                @endphp
-
-                <!-- Task 1: Read Article -->
                 <div class="mb-10">
                     <div class="flex items-center mb-6">
                         <div class="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">1</div>
@@ -98,7 +105,7 @@
                                 <option value="">Pilih artikel...</option>
                                 @foreach ($articles as $article)
                                     <option value="{{ $article->id }}" 
-                                        {{ old('read_article_id', $selectedArticle?->id) == $article->id ? 'selected' : '' }}>
+                                        {{ old('read_article_id', $readTask?->article_id) == $article->id ? 'selected' : '' }}>
                                         {{ $article->title }}
                                     </option>
                                 @endforeach
@@ -110,13 +117,12 @@
 
                         <div>
                             <label for="read_timer_seconds" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Waktu Baca Minimal (detik) *
+                                Waktu Baca (detik) *
                             </label>
                             <input type="number" id="read_timer_seconds" name="read_timer_seconds"
-                                value="{{ old('read_timer_seconds', $readTask?->timer_seconds) }}" min="30" max="3600"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E] @error('read_timer_seconds') border-red-500 @enderror"
+                                value="{{ old('read_timer_seconds', $readTask?->timer_seconds ?? 120) }}" min="30" max="3600"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
                                 required>
-                            <p class="text-xs text-gray-500 mt-1">Minimal 30 detik, maksimal 1 jam</p>
                             @error('read_timer_seconds')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -127,8 +133,8 @@
                                 XP Reward *
                             </label>
                             <input type="number" id="read_xp_reward" name="read_xp_reward"
-                                value="{{ old('read_xp_reward', $readTask?->xp_reward) }}" min="1"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E] @error('read_xp_reward') border-red-500 @enderror"
+                                value="{{ old('read_xp_reward', $readTask?->xp_reward ?? 50) }}" min="1"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
                                 required>
                             @error('read_xp_reward')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -137,28 +143,26 @@
                     </div>
                 </div>
 
-                <!-- Task 2: Engage (Like & Comment) -->
                 <div class="mb-10">
                     <div class="flex items-center mb-6">
                         <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">2</div>
                         <div>
                             <h3 class="text-xl font-semibold text-gray-900">Task 2: Like & Komen</h3>
-                            <p class="text-sm text-gray-500">User harus like dan memberi komen pada artikel yang sama</p>
+                            <p class="text-sm text-gray-500">Aksi interaksi pada artikel yang sama</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-purple-50 p-6 rounded-lg">
                         <div>
                             <label for="engage_required_count" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Jumlah Aksi yang Dibutuhkan *
+                                Jumlah Aksi *
                             </label>
                             <select id="engage_required_count" name="engage_required_count"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E] @error('engage_required_count') border-red-500 @enderror"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
                                 required>
                                 <option value="2" {{ old('engage_required_count', $engageTask?->required_count) == 2 ? 'selected' : '' }}>2 Aksi (Like + Komen)</option>
-                                <option value="1" {{ old('engage_required_count', $engageTask?->required_count) == 1 ? 'selected' : '' }}>1 Aksi (Hanya Like atau Komen)</option>
+                                <option value="1" {{ old('engage_required_count', $engageTask?->required_count) == 1 ? 'selected' : '' }}>1 Aksi (Hanya Like/Komen)</option>
                             </select>
-                            <p class="text-xs text-gray-500 mt-1">Biasanya 2 aksi: like dan komen</p>
                             @error('engage_required_count')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -169,54 +173,97 @@
                                 XP Reward *
                             </label>
                             <input type="number" id="engage_xp_reward" name="engage_xp_reward"
-                                value="{{ old('engage_xp_reward', $engageTask?->xp_reward) }}" min="1"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E] @error('engage_xp_reward') border-red-500 @enderror"
+                                value="{{ old('engage_xp_reward', $engageTask?->xp_reward ?? 30) }}" min="1"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
                                 required>
                             @error('engage_xp_reward')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
-                    
-                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <div class="flex">
-                            <x-heroicon-s-information-circle class="h-5 w-5 text-yellow-600 mr-2" />
-                            <p class="text-sm text-yellow-800">
-                                Task ini menggunakan artikel yang sama dengan Task 1. User harus like dan komen artikel tersebut.
-                            </p>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Task 3: Quiz -->
                 <div class="mb-10">
                     <div class="flex items-center mb-6">
                         <div class="bg-yellow-100 text-yellow-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">3</div>
                         <div>
                             <h3 class="text-xl font-semibold text-gray-900">Task 3: Quiz</h3>
-                            <p class="text-sm text-gray-500">Quiz berdasarkan materi artikel</p>
+                            <p class="text-sm text-gray-500">Soal quiz berdasarkan artikel</p>
                         </div>
                     </div>
 
                     <div class="bg-yellow-50 p-6 rounded-lg">
-                        <div class="mb-6">
+                        <div>
                             <label for="quiz_xp_reward" class="block text-sm font-semibold text-gray-700 mb-2">
-                                XP Reward untuk Quiz *
+                                XP Reward Quiz *
                             </label>
                             <input type="number" id="quiz_xp_reward" name="quiz_xp_reward"
-                                value="{{ old('quiz_xp_reward', $quizTask?->xp_reward) }}" min="1"
-                                class="w-full md:w-1/3 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E] @error('quiz_xp_reward') border-red-500 @enderror"
+                                value="{{ old('quiz_xp_reward', $quizTask?->xp_reward ?? 70) }}" min="1"
+                                class="w-full md:w-1/3 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
                                 required>
-                            @error('quiz_xp_reward')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
                         </div>
 
-                        <div id="quizSection">
-                            <h4 class="text-lg font-medium text-gray-900 mb-4">Soal Quiz</h4>
+                        <div id="quizSection" class="mt-6">
+                            <h4 class="text-lg font-medium text-gray-900 mb-4">Daftar Soal</h4>
                             
                             <div id="quizQuestions" class="space-y-6">
-                                <!-- Existing quiz questions will be loaded here -->
+                                {{-- Render Existing Questions from Database --}}
+                                @if(old('quiz_questions'))
+                                    {{-- Jika ada error validasi dan kembali ke form, gunakan data OLD --}}
+                                    {{-- Implementasi untuk OLD data cukup kompleks, biasanya diloop ulang --}}
+                                @elseif($existingQuestions)
+                                    @foreach($existingQuestions as $index => $question)
+                                        <div class="quiz-question border border-gray-200 rounded-lg p-4 bg-white" data-index="{{ $index }}">
+                                            <div class="flex justify-between items-center mb-4">
+                                                <h5 class="font-medium text-gray-900">Soal <span class="question-number">{{ $index + 1 }}</span></h5>
+                                                <button type="button" class="text-red-600 hover:text-red-800 remove-question">
+                                                    <x-heroicon-s-trash class="h-5 w-5" />
+                                                </button>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Pertanyaan *</label>
+                                                <textarea name="quiz_questions[{{ $index }}][question]" rows="2" 
+                                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
+                                                    required>{{ $question['question'] ?? $question->question }}</textarea>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Penjelasan (Opsional)</label>
+                                                <textarea name="quiz_questions[{{ $index }}][explanation]" rows="2"
+                                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]">{{ $question['explanation'] ?? $question->explanation ?? '' }}</textarea>
+                                            </div>
+
+                                            <div class="quiz-options space-y-3">
+                                                <p class="text-sm font-medium text-gray-700 mb-2">Pilihan Jawaban *</p>
+                                                @php
+                                                    $options = $question['options'] ?? $question->options;
+                                                    // Handle structure variation (array or object)
+                                                @endphp
+                                                @foreach($options as $optIndex => $option)
+                                                    <div class="quiz-option flex items-center space-x-3">
+                                                        <input type="radio" name="quiz_questions[{{ $index }}][correct_option]" value="{{ $optIndex }}" 
+                                                            class="correct-radio" 
+                                                            {{ (isset($question['correct_option']) && $question['correct_option'] == $optIndex) ? 'checked' : '' }}>
+                                                        
+                                                        <input type="text" name="quiz_questions[{{ $index }}][options][{{ $optIndex }}][text]" 
+                                                            value="{{ $option['text'] ?? $option }}" 
+                                                            placeholder="Masukkan pilihan jawaban..."
+                                                            class="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]" required>
+                                                        
+                                                        <button type="button" class="text-red-600 hover:text-red-800 remove-option">
+                                                            <x-heroicon-s-x-mark class="h-4 w-4" />
+                                                        </button>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+
+                                            <button type="button" class="add-option mt-3 text-sm text-blue-600 hover:text-blue-800">
+                                                + Tambah Pilihan
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
 
                             <button type="button" id="addQuestionBtn"
@@ -229,7 +276,7 @@
                 </div>
 
                 <div class="flex justify-end space-x-4 mt-8 pt-6 border-t">
-                    <a href="{{ route('admin.daily-missions.show', $dailyMission) }}"
+                    <a href="{{ route('admin.daily-missions.index') }}"
                         class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all">
                         Batal
                     </a>
@@ -242,7 +289,6 @@
         </div>
     </div>
 
-    <!-- Quiz Question Template -->
     <template id="quizQuestionTemplate">
         <div class="quiz-question border border-gray-200 rounded-lg p-4 bg-white">
             <div class="flex justify-between items-center mb-4">
@@ -251,37 +297,27 @@
                     <x-heroicon-s-trash class="h-5 w-5" />
                 </button>
             </div>
-
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Pertanyaan *</label>
-                <textarea name="quiz_questions[][question]" rows="2" placeholder="Masukkan pertanyaan..."
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
-                    required></textarea>
+                <textarea rows="2" placeholder="Masukkan pertanyaan..." class="question-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]" required></textarea>
             </div>
-
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Penjelasan (Opsional)</label>
-                <textarea name="quiz_questions[][explanation]" rows="2" placeholder="Penjelasan jawaban..."
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"></textarea>
+                <textarea rows="2" placeholder="Penjelasan jawaban..." class="explanation-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]"></textarea>
             </div>
-
             <div class="quiz-options space-y-3">
                 <p class="text-sm font-medium text-gray-700 mb-2">Pilihan Jawaban *</p>
-                <!-- Options will be added here -->
-            </div>
-
+                </div>
             <button type="button" class="add-option mt-3 text-sm text-blue-600 hover:text-blue-800">
                 + Tambah Pilihan
             </button>
         </div>
     </template>
 
-    <!-- Quiz Option Template -->
     <template id="quizOptionTemplate">
         <div class="quiz-option flex items-center space-x-3">
-            <input type="radio" name="quiz_questions[][correct_option]" value="" class="correct-radio">
-            <input type="text" name="quiz_questions[][options][][text]" placeholder="Masukkan pilihan jawaban..."
-                class="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]" required>
+            <input type="radio" value="" class="correct-radio">
+            <input type="text" placeholder="Masukkan pilihan jawaban..." class="option-input flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0F766E]" required>
             <button type="button" class="text-red-600 hover:text-red-800 remove-option">
                 <x-heroicon-s-x-mark class="h-4 w-4" />
             </button>
@@ -289,150 +325,101 @@
     </template>
 
     <script>
-        let questionIndex = 0;
-        const existingQuizzes = @json($quizTask?->quizzes?->load('options') ?? []);
+        document.addEventListener('DOMContentLoaded', function() {
+            const questionsContainer = document.getElementById('quizQuestions');
+            // Hitung jumlah soal yang sudah ada dari PHP render
+            let questionIndex = questionsContainer.children.length;
 
-        document.getElementById('addQuestionBtn').addEventListener('click', function() {
-            addQuestion();
-        });
+            // --- Fungsi Helper untuk Re-Index (Agar radio button group unik per soal) ---
+            function updateQuestionIndexes() {
+                const questions = questionsContainer.querySelectorAll('.quiz-question');
+                questions.forEach((q, qIdx) => {
+                    // Update nomor visual
+                    q.querySelector('.question-number').textContent = qIdx + 1;
+                    
+                    // Update name attribute untuk Question
+                    const qInput = q.querySelector('textarea[name*="[question]"]') || q.querySelector('.question-input');
+                    if(qInput) qInput.name = `quiz_questions[${qIdx}][question]`;
 
-        function addQuestion(quizData = null) {
-            const template = document.getElementById('quizQuestionTemplate');
-            const clone = template.content.cloneNode(true);
+                    const eInput = q.querySelector('textarea[name*="[explanation]"]') || q.querySelector('.explanation-input');
+                    if(eInput) eInput.name = `quiz_questions[${qIdx}][explanation]`;
 
-            // Update question number
-            clone.querySelector('.question-number').textContent = questionIndex + 1;
+                    // Update name attribute untuk Radio Button Group (PENTING)
+                    const radios = q.querySelectorAll('.correct-radio');
+                    radios.forEach(radio => {
+                        radio.name = `quiz_questions[${qIdx}][correct_option]`;
+                    });
 
-            // Update form names with index
-            const inputs = clone.querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                if (input.name) {
-                    input.name = input.name.replace('[]', `[${questionIndex}]`);
-                }
-            });
-
-            // Fill existing data if provided
-            if (quizData) {
-                clone.querySelector('textarea[name*="[question]"]').value = quizData.question;
-                clone.querySelector('textarea[name*="[explanation]"]').value = quizData.explanation || '';
-            }
-
-            // Add remove functionality
-            clone.querySelector('.remove-question').addEventListener('click', function() {
-                this.closest('.quiz-question').remove();
-                updateQuestionNumbers();
-            });
-
-            // Add option functionality
-            const addOptionBtn = clone.querySelector('.add-option');
-            addOptionBtn.addEventListener('click', function() {
-                addOption(this.closest('.quiz-question'), questionIndex);
-            });
-
-            document.getElementById('quizQuestions').appendChild(clone);
-
-            // Add options for existing question
-            if (quizData && quizData.options) {
-                const questionElement = document.querySelectorAll('.quiz-question')[questionIndex];
-                quizData.options.forEach((option, optionIndex) => {
-                    addOption(questionElement, questionIndex, option);
+                    // Update name attribute untuk Options Text
+                    const options = q.querySelectorAll('.quiz-option');
+                    options.forEach((opt, oIdx) => {
+                        const oInput = opt.querySelector('input[type="text"]');
+                        if(oInput) oInput.name = `quiz_questions[${qIdx}][options][${oIdx}][text]`;
+                        
+                        const oRadio = opt.querySelector('.correct-radio');
+                        if(oRadio) oRadio.value = oIdx;
+                    });
                 });
-            } else {
-                // Add initial 4 empty options
-                const questionElement = document.querySelectorAll('.quiz-question')[questionIndex];
-                for (let i = 0; i < 4; i++) {
-                    addOption(questionElement, questionIndex);
-                }
+                // Update global index
+                questionIndex = questions.length;
             }
 
-            questionIndex++;
-        }
-
-        function addOption(questionElement, qIndex, optionData = null) {
-            const template = document.getElementById('quizOptionTemplate');
-            const clone = template.content.cloneNode(true);
-
-            const optionsContainer = questionElement.querySelector('.quiz-options');
-            const optionIndex = optionsContainer.querySelectorAll('.quiz-option').length;
-
-            // Update form names
-            const textInput = clone.querySelector('input[type="text"]');
-            const radio = clone.querySelector('input[type="radio"]');
-
-            textInput.name = `quiz_questions[${qIndex}][options][${optionIndex}][text]`;
-            radio.name = `quiz_questions[${qIndex}][correct_option]`;
-            radio.value = optionIndex;
-
-            // Fill existing data
-            if (optionData) {
-                textInput.value = optionData.option_text;
-                if (optionData.is_correct) {
-                    radio.checked = true;
-                }
-            }
-
-            // Add hidden input for is_correct
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = `quiz_questions[${qIndex}][options][${optionIndex}][is_correct]`;
-            hiddenInput.value = (optionData && optionData.is_correct) ? '1' : '0';
-            clone.appendChild(hiddenInput);
-
-            // Update hidden input when radio is selected
-            radio.addEventListener('change', function() {
-                // Reset all options in this question to false
-                questionElement.querySelectorAll('input[name*="[is_correct]"]').forEach(input => {
-                    input.value = '0';
-                });
-                // Set selected option to true
-                hiddenInput.value = this.checked ? '1' : '0';
-            });
-
-            // Add remove functionality
-            clone.querySelector('.remove-option').addEventListener('click', function() {
-                this.closest('.quiz-option').remove();
-                updateOptionIndexes(questionElement, qIndex);
-            });
-
-            optionsContainer.appendChild(clone);
-        }
-
-        function updateOptionIndexes(questionElement, qIndex) {
-            const options = questionElement.querySelectorAll('.quiz-option');
-            options.forEach((option, index) => {
-                const textInput = option.querySelector('input[type="text"]');
-                const radio = option.querySelector('input[type="radio"]');
-                const hiddenInput = option.querySelector('input[type="hidden"]');
-
-                textInput.name = `quiz_questions[${qIndex}][options][${index}][text]`;
-                radio.value = index;
-                hiddenInput.name = `quiz_questions[${qIndex}][options][${index}][is_correct]`;
-            });
-        }
-
-        function updateQuestionNumbers() {
-            const questions = document.querySelectorAll('.quiz-question');
-            questions.forEach((question, index) => {
-                question.querySelector('.question-number').textContent = index + 1;
-                
-                // Update all form names for this question
-                const inputs = question.querySelectorAll('input, textarea');
-                inputs.forEach(input => {
-                    if (input.name) {
-                        input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
+            // --- Event Delegation untuk Elemen Dinamis ---
+            
+            // 1. Hapus Soal
+            questionsContainer.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-question')) {
+                    if (confirm('Hapus soal ini?')) {
+                        e.target.closest('.quiz-question').remove();
+                        updateQuestionIndexes();
                     }
-                });
+                }
             });
-        }
 
-        // Load existing questions
-        existingQuizzes.forEach(quizData => {
-            addQuestion(quizData);
+            // 2. Tambah Opsi pada Soal Tertentu
+            questionsContainer.addEventListener('click', function(e) {
+                if (e.target.closest('.add-option')) {
+                    const questionEl = e.target.closest('.quiz-question');
+                    const optionsContainer = questionEl.querySelector('.quiz-options');
+                    addOptionToContainer(optionsContainer, null); // null karena belum di-index ulang
+                    updateQuestionIndexes(); // Re-index untuk memastikan name atribut benar
+                }
+            });
+
+            // 3. Hapus Opsi
+            questionsContainer.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-option')) {
+                    const optionsContainer = e.target.closest('.quiz-options');
+                    // Cegah hapus jika sisa kurang dari 2 opsi (opsional logic)
+                    e.target.closest('.quiz-option').remove();
+                    updateQuestionIndexes();
+                }
+            });
+
+            // --- Fungsi Tambah Soal Baru ---
+            document.getElementById('addQuestionBtn').addEventListener('click', function() {
+                const template = document.getElementById('quizQuestionTemplate');
+                const clone = template.content.cloneNode(true);
+                const questionEl = clone.querySelector('.quiz-question');
+                const optionsContainer = questionEl.querySelector('.quiz-options');
+
+                // Tambahkan 2 opsi default
+                addOptionToContainer(optionsContainer);
+                addOptionToContainer(optionsContainer);
+
+                questionsContainer.appendChild(clone);
+                updateQuestionIndexes();
+            });
+
+            // --- Fungsi Tambah Opsi Helper ---
+            function addOptionToContainer(container) {
+                const template = document.getElementById('quizOptionTemplate');
+                const clone = template.content.cloneNode(true);
+                container.appendChild(clone);
+            }
+
+            // Initial setup for existing buttons (jika ada tombol hapus yang dirender server-side)
+            // Sebenarnya Event Delegation di atas sudah menangani ini, jadi tidak perlu loop listener manual.
         });
-
-        // Add initial question if none exist
-        if (existingQuizzes.length === 0) {
-            addQuestion();
-        }
     </script>
 @endsection

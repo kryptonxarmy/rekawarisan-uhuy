@@ -3,6 +3,43 @@
 @section('content')
 <section class="bg-gray-50 min-h-screen pb-16 relative overflow-x-hidden">
 
+    {{-- ================= LOGIKA PHP (KONEKSI VIA MODEL) ================= --}}
+    @php
+        use App\Models\DailyMission; // Panggil Model Anda
+        use Illuminate\Support\Facades\Auth;
+
+        // 1. AMBIL TANGGAL HARI INI
+        $today = date('Y-m-d');
+        
+        // 2. AMBIL DATA PAKAI MODEL (Bukan DB::table lagi)
+        // Pakai whereDate supaya aman meskipun di database formatnya ada jam-nya
+        $masterMisi = DailyMission::whereDate('date', $today)->first();
+
+        // 3. AMBIL NILAI XP
+        if ($masterMisi) {
+            // Karena pakai Model, kita bisa akses langsung propertinya
+            $xpRead  = $masterMisi->xp_read   ?? 0; 
+            $xpShare = $masterMisi->xp_engage ?? 0;
+            $xpQuiz  = $masterMisi->xp_quiz   ?? 0;
+            
+            // Hitung target total dari data database
+            $targetTotal = $xpRead + $xpShare + $xpQuiz;
+        } else {
+            // Jika Admin Lupa input misi hari ini, set ke 0 semua
+            $xpRead = 0; $xpShare = 0; $xpQuiz = 0;
+            $targetTotal = 150; // Fallback default visual
+        }
+        
+        // Cegah error division by zero jika target 0
+        if ($targetTotal == 0) $targetTotal = 1;
+
+        // Hitung Persentase
+        // Pastikan $dailyPoints sudah dikirim dari Controller
+        $currentPoints = $dailyPoints ?? 0; 
+        $progress = ($currentPoints / $targetTotal) * 100;
+        if ($progress > 100) $progress = 100;
+    @endphp
+    
     {{-- ================= HERO SECTION ================= --}}
     <div 
         style="background-image: url('{{ asset('assets/landing/background-herosection.png') }}'); 
@@ -13,22 +50,19 @@
         
         <div class="pt-24 pb-16 md:pt-32 md:pb-20 min-h-[30vh] md:min-h-[40vh] flex flex-col items-center justify-center relative z-10">
             <div class="container mx-auto px-6 text-center">
-                
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl 
                         font-extrabold tracking-tight 
                         text-yellow-400 
                         drop-shadow-lg leading-tight md:leading-none">
                     Jejak Maestro
                 </h1>
-
-                
             </div>
         </div>
     </div>
 
     <div class="container mx-auto px-6 mt-10 grid grid-cols-6 gap-4">
 
-        {{-- ================= CARD 1: WELCOME ================= --}}
+        {{-- CARD 1: WELCOME --}}
         <div class="col-span-6 md:col-span-3 lg:col-span-4 bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-8 border border-[#389A92]/20 overflow-hidden relative group hover:shadow-2xl transition-all duration-500">
             <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#389A92]/10 to-transparent rounded-full blur-xl"></div>
             <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-amber-400/10 to-transparent rounded-full blur-lg"></div>
@@ -46,18 +80,13 @@
                     <div class="bg-gradient-to-br from-gray-50 to-white p-6 rounded-2xl border border-gray-200/80 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-[#389A92]/30">
                         <div class="flex items-start gap-4">
                             <div class="w-12 h-12 bg-gradient-to-br from-[#389A92] to-[#2D7A74] rounded-xl flex items-center justify-center shadow-lg">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                </svg>
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             </div>
                             <div class="flex-1">
                                 <h3 class="font-bold text-gray-800 text-lg mb-2">Raih Poin Maksimal Harian</h3>
                                 <p class="text-gray-600 mb-4 leading-relaxed">Tuntaskan semua tugas harianmu dan buka Lencana Eksklusif.</p>
                                 <button onclick="document.getElementById('misi-section').scrollIntoView({behavior: 'smooth'})" class="inline-flex items-center gap-2 bg-gradient-to-r from-[#389A92] to-[#2D7A74] hover:from-[#2D7A74] hover:to-[#389A92] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                                     <span>Mulai Misi</span>
-                                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                    </svg>
                                 </button>
                             </div>
                         </div>
@@ -73,30 +102,26 @@
             </div>
         </div>
 
-        {{-- ================= CARD 2: INFO ================= --}}
+        {{-- CARD 2: INFO --}}
         <div class="col-span-6 md:col-span-3 lg:col-span-2 bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-8 border border-[#389A92]/20 overflow-hidden relative group hover:shadow-2xl transition-all duration-500">
             <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-amber-400/10 to-transparent rounded-full blur-lg"></div>
             <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-[#389A92]/10 to-transparent rounded-full blur-md"></div>
             
             <div class="space-y-6 relative z-10">
                 <div class="space-y-2">
-                    <h2 class="text-3xl font-black text-[#145D63] leading-tight">
-                        Capai Puncak Poin Harian <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-yellow-500">!</span>
-                    </h2>
+                    <h2 class="text-3xl font-black text-[#145D63] leading-tight">Capai Puncak Poin!</h2>
                     <div class="w-12 h-1 bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full"></div>
-                    <p class="text-gray-600 font-medium">Hadiah istimewa menanti! Semua misi di-reset secara otomatis setiap hari.</p>
+                    <p class="text-gray-600 font-medium">Hadiah istimewa menanti! Reset otomatis setiap hari.</p>
                 </div>
                 
-                <div class="bg-gradient-to-br from-amber-50 to-white p-6 rounded-2xl border border-amber-200/80 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-amber-300/50">
+                <div class="bg-gradient-to-br from-amber-50 to-white p-6 rounded-2xl border border-amber-200/80 shadow-lg hover:shadow-xl transition-all duration-300">
                     <div class="flex items-start gap-4">
                         <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-lg flex items-center justify-center shadow-lg">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <div class="flex-1">
                             <h3 class="font-bold text-gray-800 mb-2">Tantangan Poin</h3>
-                            <p class="text-gray-600 text-sm mb-4 leading-relaxed">Selesaikan Misi Harian untuk Lencana dan Hadiah.</p>
+                            <p class="text-gray-600 text-sm mb-4 leading-relaxed">Selesaikan Misi Harian.</p>
                         </div>
                     </div>
                 </div>
@@ -107,12 +132,6 @@
         <div id="misi-section" class="col-span-6 md:col-span-3 lg:col-span-3 space-y-6">
             <h2 class="text-3xl font-black text-gray-900 border-b-2 border-gray-200 pb-2">Misi Harian</h2>
                 
-            @php
-                // Skala 200 poin sesuai request badge (100, 150, 200)
-                $progress = $dailyPoints > 0 ? ($dailyPoints / 200) * 100 : 0; 
-                if ($progress > 100) $progress = 100;
-            @endphp
-
             <div class="space-y-1">
                 <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                     <div class="h-3 rounded-full transition-all duration-1000 ease-out" 
@@ -120,13 +139,14 @@
                 </div>
                 <div class="flex justify-between text-base font-bold text-gray-700">
                     <span class="text-lg font-extrabold text-[#389A92]">Point : {{ $dailyPoints }}</span>
-                    <span class="text-gray-500">Target: 200</span>
+                    {{-- TARGET POIN DINAMIS DARI DB --}}
+                    <span class="text-gray-500">Target: {{ $targetTotal }}</span>
                 </div>
             </div>
             
             <div class="space-y-4">
                 
-                {{-- MISI 1: MEMBACA --}}
+                {{-- 1. MISI MEMBACA (PERTAMA - SELALU TERBUKA) --}}
                 <div class="flex items-center bg-white p-4 rounded-xl shadow-md transition hover:shadow-lg">
                     <img src="{{ asset('assets/logo-rekawarisan.png') }}" alt="Logo" class="w-12 mr-4">
                     <div class="flex-grow">
@@ -134,7 +154,8 @@
                         <div class="flex justify-between items-center">
                             <div class="flex items-center space-x-1">
                                 <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"></circle></svg>
-                                <span class="text-xs text-amber-600 font-bold">+10 Poin</span>
+                                {{-- XP DARI DATABASE --}}
+                                <span class="text-xs text-amber-600 font-bold">+{{ $xpRead }} Poin</span>
                             </div>
 
                             @if ($dailyMission?->read_done)
@@ -142,7 +163,7 @@
                             @else
                                 <form method="POST" action="{{ route('mission.complete.read') }}">
                                     @csrf
-                                    <button type="submit" class="text-sm font-semibold text-blue-600 hover:text-blue-800 underline">Tandai Selesai</button>
+                                    <button type="submit" class="text-sm font-semibold text-blue-600 hover:text-blue-800 underline">Pergi membaca</button>
                                 </form>
                             @endif
                         </div>
@@ -156,49 +177,20 @@
                     </div>
                 </div>
 
-                {{-- MISI 2: KUIS --}}
-                <div @if(!$dailyMission?->quiz_done) id="open-quiz-modal" @endif 
-                     class="flex items-center bg-white p-4 rounded-xl border border-gray-300 shadow-md transition duration-300 {{ !$dailyMission?->quiz_done ? 'cursor-pointer hover:shadow-lg hover:border-amber-300' : '' }}">
-                    
-                    <img src="{{ asset('assets/logo-rekawarisan.png') }}" alt="Logo" class="w-12 mr-4">
-                    <div class="flex-grow">
-                        <p class="font-medium text-gray-900">Pertanyaan Kuis</p>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"></circle></svg>
-                                <span class="text-xs text-amber-600 font-bold">+40 Poin</span>
-                            </div>
-                            
-                            @if ($dailyMission?->quiz_done)
-                                <p class="text-sm font-semibold text-green-600 mb-1">Misi Selesai</p>
-                            @else
-                                <p class="text-sm font-semibold text-red-500 mb-1 animate-pulse">Kerjakan Kuis</p>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="text-right ml-2">
-                        @if ($dailyMission?->quiz_done)
-                            <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-done.png') }}" alt="Done" class="w-16">
-                        @else
-                            <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-not-done.png') }}" alt="Not Done" class="w-16">
-                        @endif
-                    </div>
-                </div>
-
-                {{-- MISI 3: SHARE (BONUS) - TERBUKA JIKA MISI 1 & 2 SELESAI --}}
-                @if ($dailyMission?->read_done && $dailyMission?->quiz_done)
-                    {{-- STATE: TERBUKA (AKTIF) --}}
+                {{-- 2. MISI BAGIKAN / SHARE (KEDUA - TERBUKA SETELAH BACA SELESAI) --}}
+                @if ($dailyMission?->read_done)
+                    {{-- STATE: TERBUKA --}}
                     <div class="flex items-center bg-white p-4 rounded-xl shadow-md transition hover:shadow-lg border-2 border-amber-200">
                         <img src="{{ asset('assets/logo-rekawarisan.png') }}" alt="Logo" class="w-12 mr-4">
                         <div class="flex-grow">
-                            <p class="font-medium text-gray-900">Bagikan Budaya ke Teman</p>
+                            <p class="font-medium text-gray-900">Like dan komen</p>
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center space-x-1">
                                     <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"></circle></svg>
-                                    <span class="text-xs text-amber-600 font-bold">+100 Poin</span>
+                                    {{-- XP DARI DATABASE --}}
+                                    <span class="text-xs text-amber-600 font-bold">+{{ $xpShare }} Poin</span>
                                 </div>
                                 
-                                {{-- LOGIC BUTTON SHARE (+100 POIN) --}}
                                 @if($dailyMission?->share_done)
                                     <p class="text-sm font-semibold text-green-600 mb-1">Misi Selesai</p>
                                 @else
@@ -219,14 +211,59 @@
                         </div>
                     </div>
                 @else
-                    {{-- STATE: TERKUNCI (LOCKED) --}}
+                    {{-- STATE: TERKUNCI --}}
                     <div class="bg-gray-100 p-4 rounded-xl flex items-center justify-center space-x-3 shadow-inner border border-gray-200 opacity-75 cursor-not-allowed">
                         <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                         </svg>
                         <div class="text-left">
-                            <p class="text-gray-600 font-bold">Misi Ini Belum Terbuka</p>
-                            <p class="text-xs text-gray-500">Selesaikan misi membaca & kuis dulu.</p>
+                            <p class="text-gray-600 font-bold">Misi Bagikan Belum Terbuka</p>
+                            <p class="text-xs text-gray-500">Selesaikan misi membaca dulu.</p>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- 3. MISI KUIS (KETIGA - TERAKHIR - PINDAH HALAMAN) --}}
+                @if ($dailyMission?->read_done && $dailyMission?->share_done)
+                    {{-- STATE: TERBUKA --}}
+                    <div class="flex items-center bg-white p-4 rounded-xl border border-gray-300 shadow-md transition duration-300 cursor-pointer hover:shadow-lg hover:border-amber-300">
+                        <img src="{{ asset('assets/logo-rekawarisan.png') }}" alt="Logo" class="w-12 mr-4">
+                        <div class="flex-grow">
+                            <p class="font-medium text-gray-900">Pertanyaan Kuis</p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"></circle></svg>
+                                    {{-- XP DARI DATABASE --}}
+                                    <span class="text-xs text-amber-600 font-bold">+{{ $xpQuiz }} Poin</span>
+                                </div>
+                                
+                                @if ($dailyMission?->quiz_done)
+                                    <p class="text-sm font-semibold text-green-600 mb-1">Misi Selesai</p>
+                                @else
+                                    {{-- LINK KE HALAMAN KUIS /quiz --}}
+                                    <a href="{{ url('quiz') }}" class="text-sm font-semibold text-red-500 mb-1 animate-pulse hover:text-red-700 underline">
+                                        Kerjakan Kuis
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="text-right ml-2">
+                            @if ($dailyMission?->quiz_done)
+                                <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-done.png') }}" alt="Done" class="w-16">
+                            @else
+                                <img src="{{ asset('assets/jejakmaestro/misi/logo-misi-not-done.png') }}" alt="Not Done" class="w-16">
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    {{-- STATE: TERKUNCI --}}
+                    <div class="bg-gray-100 p-4 rounded-xl flex items-center justify-center space-x-3 shadow-inner border border-gray-200 opacity-75 cursor-not-allowed">
+                        <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <div class="text-left">
+                            <p class="text-gray-600 font-bold">Misi Kuis Belum Terbuka</p>
+                            <p class="text-xs text-gray-500">Selesaikan misi membaca & bagikan dulu.</p>
                         </div>
                     </div>
                 @endif
@@ -237,26 +274,20 @@
             <div class="space-y-4 pt-4 border-t border-gray-200">
                 <h2 class="text-2xl font-bold text-gray-900">Koleksi Badge Anda :</h2>
                 <div class="flex flex-wrap gap-4 justify-start items-center min-h-[100px]">
-                    
-                    {{-- Loop Badge User --}}
                     @forelse ($user->badges ?? [] as $badge)
                         <div class="flex flex-col items-center animate-fade-in-up">
-                            {{-- PERBAIKAN DI SINI: Hapus string path manual, gunakan langsung dari DB --}}
                             <img src="{{ asset($badge->image) }}" 
                                 alt="{{ $badge->name }}" 
                                 class="w-20 h-20 rounded-full shadow-lg border-2 border-yellow-500 hover:scale-110 transition-transform cursor-pointer"
                                 title="{{ $badge->name }}">
-                                
                             <span class="text-xs font-bold text-gray-600 mt-1">{{ $badge->name }}</span>
                         </div>
                     @empty
-                        {{-- Bagian empty tetap sama --}}
                         <div class="flex items-center text-gray-500 italic bg-gray-100 px-4 py-2 rounded-lg w-full">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Belum memiliki badge. Selesaikan misi untuk raih 100, 150, & 200 Poin!
+                            Belum memiliki badge. Selesaikan misi untuk raih target poin!
                         </div>
                     @endforelse
-
                 </div>
             </div>
         </div>
@@ -269,8 +300,6 @@
 {{-- ================= LEADERBOARD ================= --}}
 <div class="col-span-6 md:col-span-3 lg:col-span-2 space-y-6">
     <div class="bg-white p-6 rounded-3xl shadow-2xl border border-gray-100 space-y-4 h-full">
-        
-        {{-- ## Judul Leaderboard --}}
         <h2 class="text-2xl font-extrabold text-teal-800 text-center flex items-center justify-center border-b pb-2">
             <svg class="w-6 h-6 text-amber-500 mr-2" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
@@ -392,29 +421,6 @@
     </div>
 </section>
 
-{{-- ================= MODAL KUIS ================= --}}
-<div id="quiz-modal" class="fixed inset-0 z-50 hidden bg-gray-900/60 backdrop-blur-sm flex items-center justify-center px-4">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 relative">
-        <div class="flex justify-between items-center border-b pb-3 mb-4">
-            <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2"><span class="text-amber-500">✦</span> Uji Pemahaman Budaya</h3>
-            <button id="close-quiz-modal" class="text-gray-400 hover:text-red-500 focus:outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-        </div>
-        <form action="{{ route('mission.complete.quiz') }}" method="POST">
-            @csrf
-            <div class="mb-6">
-                <p class="font-semibold text-gray-700 mb-3 text-lg">1. Apa budaya asli Jawa yang diakui UNESCO?</p>
-                <div class="space-y-3">
-                    <label class="flex items-center bg-gray-50 p-3 rounded-lg hover:bg-amber-50 cursor-pointer transition"><input type="radio" name="jawaban_soal_1" value="wayang" class="form-radio text-amber-500"><span class="ml-3 text-gray-700">Wayang Kulit</span></label>
-                    <label class="flex items-center bg-gray-50 p-3 rounded-lg hover:bg-amber-50 cursor-pointer transition"><input type="radio" name="jawaban_soal_1" value="reog" class="form-radio text-amber-500"><span class="ml-3 text-gray-700">Reog Ponorogo</span></label>
-                </div>
-            </div>
-            <div class="pt-4 border-t flex justify-end">
-                <button type="submit" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg">Kirim Jawaban</button>
-            </div>
-        </form>
-    </div>
-</div>
-
 {{-- ================= MODAL REWARD BADGE BARU ================= --}}
 @if(session('badge_awarded'))
 <div id="reward-modal" class="fixed inset-0 z-[99] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
@@ -466,18 +472,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         showLeaderboard('indonesia'); 
-        const openModalBtn = document.getElementById('open-quiz-modal');
-        const closeModalBtn = document.getElementById('close-quiz-modal');
-        const modal = document.getElementById('quiz-modal');
-
-        if (openModalBtn) openModalBtn.addEventListener('click', () => modal.classList.remove('hidden'));
-        if (closeModalBtn) closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
-        if(modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
     });
-console.log("🔥 CHECK DATA DARI LARAVEL 🔥");
-console.log("province:", @json($province));
-console.log("regency:", @json($regency));
-console.log("User in Blade:", @json($user));
 </script>
 
 <style>
