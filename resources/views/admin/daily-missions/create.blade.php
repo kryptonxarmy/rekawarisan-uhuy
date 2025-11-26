@@ -281,121 +281,112 @@
         </div>
     </template>
 
-    <script>
-        let questionIndex = 0;
+<script>
+    let questionIndex = 0;
 
-        document.getElementById('addQuestionBtn').addEventListener('click', function() {
-            addQuestion();
+    document.getElementById('addQuestionBtn').addEventListener('click', function() {
+        addQuestion();
+    });
+
+    function addQuestion() {
+        const template = document.getElementById('quizQuestionTemplate');
+        const clone = template.content.cloneNode(true);
+
+        // Nomor soal
+        clone.querySelector('.question-number').textContent = questionIndex + 1;
+
+        // Update name index
+        const inputs = clone.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            if (input.name) {
+                input.name = input.name.replace('[]', `[${questionIndex}]`);
+            }
         });
 
-        function addQuestion() {
-            const template = document.getElementById('quizQuestionTemplate');
-            const clone = template.content.cloneNode(true);
+        // Tombol hapus soal
+        clone.querySelector('.remove-question').addEventListener('click', function() {
+            this.closest('.quiz-question').remove();
+            updateQuestionNumbers();
+        });
 
-            // Update question number
-            clone.querySelector('.question-number').textContent = questionIndex + 1;
+        // Tombol tambah opsi
+        clone.querySelector('.add-option').addEventListener('click', function() {
+            addOption(this.closest('.quiz-question'), questionIndex);
+        });
 
-            // Update form names with index
-            const inputs = clone.querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                if (input.name) {
-                    input.name = input.name.replace('[]', `[${questionIndex}]`);
-                }
-            });
+        document.getElementById('quizQuestions').appendChild(clone);
 
-            // Add remove functionality
-            clone.querySelector('.remove-question').addEventListener('click', function() {
-                this.closest('.quiz-question').remove();
-                updateQuestionNumbers();
-            });
-
-            // Add option functionality
-            const addOptionBtn = clone.querySelector('.add-option');
-            addOptionBtn.addEventListener('click', function() {
-                addOption(this.closest('.quiz-question'), questionIndex);
-            });
-
-            document.getElementById('quizQuestions').appendChild(clone);
-
-            // Add initial 4 options
-            const questionElement = document.querySelectorAll('.quiz-question')[questionIndex];
-            for (let i = 0; i < 4; i++) {
-                addOption(questionElement, questionIndex);
-            }
-
-            questionIndex++;
+        // Tambahkan 4 opsi default
+        const questionElement = document.querySelectorAll('.quiz-question')[questionIndex];
+        for (let i = 0; i < 4; i++) {
+            addOption(questionElement, questionIndex);
         }
 
-        function addOption(questionElement, qIndex) {
-            const template = document.getElementById('quizOptionTemplate');
-            const clone = template.content.cloneNode(true);
+        questionIndex++;
+    }
 
-            const optionsContainer = questionElement.querySelector('.quiz-options');
-            const optionIndex = optionsContainer.querySelectorAll('.quiz-option').length;
+    function addOption(questionElement, qIndex) {
+        const template = document.getElementById('quizOptionTemplate');
+        const clone = template.content.cloneNode(true);
 
-            // Update form names
-            const textInput = clone.querySelector('input[type="text"]');
-            const radio = clone.querySelector('input[type="radio"]');
+        const optionsContainer = questionElement.querySelector('.quiz-options');
+        const optionIndex = optionsContainer.querySelectorAll('.quiz-option').length;
 
-            textInput.name = `quiz_questions[${qIndex}][options][${optionIndex}][text]`;
+        // Update form names
+        const textInput = clone.querySelector('input[type="text"]');
+        const radio = clone.querySelector('input[type="radio"]');
+
+        textInput.name = `quiz_questions[${qIndex}][options][${optionIndex}][text]`;
+        radio.name = `quiz_questions[${qIndex}][correct_option]`;
+        radio.value = optionIndex;
+
+        // Hidden correct
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = `quiz_questions[${qIndex}][options][${optionIndex}][is_correct]`;
+        hiddenInput.value = '0';
+        clone.appendChild(hiddenInput);
+
+        // Update ketika memilih jawaban benar
+        radio.addEventListener('change', function() {
+            questionElement.querySelectorAll('input[name*="[is_correct]"]').forEach(input => {
+                input.value = '0';
+            });
+            hiddenInput.value = this.checked ? '1' : '0';
+        });
+
+        // Hapus opsi
+        clone.querySelector('.remove-option').addEventListener('click', function() {
+            this.closest('.quiz-option').remove();
+            updateOptionIndexes(questionElement, qIndex);
+        });
+
+        optionsContainer.appendChild(clone);
+    }
+
+    function updateOptionIndexes(questionElement, qIndex) {
+        const options = questionElement.querySelectorAll('.quiz-option');
+
+        options.forEach((option, newIndex) => {
+            const textInput = option.querySelector('input[type="text"]');
+            const radio = option.querySelector('input[type="radio"]');
+            const hiddenInput = option.querySelector('input[type="hidden"]');
+
+            // Update name sesuai index baru
+            textInput.name = `quiz_questions[${qIndex}][options][${newIndex}][text]`;
             radio.name = `quiz_questions[${qIndex}][correct_option]`;
-            radio.value = optionIndex;
+            radio.value = newIndex;
+            hiddenInput.name = `quiz_questions[${qIndex}][options][${newIndex}][is_correct]`;
+        });
+    }
 
-            // Add hidden input for is_correct
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = `quiz_questions[${qIndex}][options][${optionIndex}][is_correct]`;
-            hiddenInput.value = '0';
-            clone.appendChild(hiddenInput);
+    function updateQuestionNumbers() {
+        const questions = document.querySelectorAll('.quiz-question');
+        questions.forEach((q, index) => {
+            q.querySelector('.question-number').textContent = index + 1;
+        });
+        questionIndex = questions.length;
+    }
+</script>
 
-            // Update hidden input when radio is selected
-            radio.addEventListener('change', function() {
-                // Reset all options in this question to false
-                questionElement.querySelectorAll('input[name*="[is_correct]"]').forEach(input => {
-                    input.value = '0';
-                });
-                // Set selected option to true
-                hiddenInput.value = this.checked ? '1' : '0';
-            });
-
-            // Add remove functionality
-            clone.querySelector('.remove-option').addEventListener('click', function() {
-                this.closest('.quiz-option').remove();
-                updateOptionIndexes(questionElement, qIndex);
-            });
-
-            optionsContainer.appendChild(clone);
-        }
-
-        function updateOptionIndexes(questionElement, qIndex) {
-            const options = questionElement.querySelectorAll('.quiz-option');
-            options.forEach((option, index) => {
-                const textInput = option.querySelector('input[type="text"]');
-                const radio = option.querySelector('input[type="radio"]');
-                const hiddenInput = option.querySelector('input[type="hidden"]');
-
-                textInput.name = `quiz_questions[${qIndex}][options][${index}][text]`;
-                radio.value = index;
-                hiddenInput.name = `quiz_questions[${qIndex}][options][${index}][is_correct]`;
-            });
-        }
-
-        function updateQuestionNumbers() {
-            const questions = document.querySelectorAll('.quiz-question');
-            questions.forEach((question, index) => {
-                question.querySelector('.question-number').textContent = index + 1;
-                
-                // Update all form names for this question
-                const inputs = question.querySelectorAll('input, textarea');
-                inputs.forEach(input => {
-                    if (input.name) {
-                        input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
-                    }
-                });
-            });
-        }
-
-        // Add initial question
-        addQuestion();
-    </script>
 @endsection

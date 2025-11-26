@@ -42,6 +42,7 @@ class DailyMissionController extends Controller
     {
         $request->validate([
             'created_at' => 'required|date|unique:daily_missions,date',
+            'created_at' => 'required|date|unique:daily_missions,date',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             
