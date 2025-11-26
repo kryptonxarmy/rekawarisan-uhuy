@@ -9,7 +9,7 @@
         </div>
 
         <div class="p-8">
-            <form method="POST" action="{{ route('user.articles.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('pustakawarisan.store') }}" enctype="multipart/form-data">
                 @csrf
 
                 <!-- Judul -->

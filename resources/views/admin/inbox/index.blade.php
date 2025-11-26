@@ -12,7 +12,6 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Telepon</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pesan</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waktu</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -22,7 +21,6 @@
                         <td class="px-6 py-4">{{ $contact->email }}</td>
                         <td class="px-6 py-4">{{ $contact->phone ?? '-' }}</td>
                         <td class="px-6 py-4">{{ Str::limit($contact->message, 50) }}</td>
-                        <td class="px-6 py-4">{{ $contact->created_at ?? '-' }}</td>
                     </tr>
                 @endforeach
             </tbody>

@@ -13,7 +13,7 @@
         
         // 2. AMBIL DATA PAKAI MODEL (Bukan DB::table lagi)
         // Pakai whereDate supaya aman meskipun di database formatnya ada jam-nya
-        $masterMisi = DailyMission::whereDate('date', $today)->first();
+        $masterMisi = DailyMission::whereDate('created_at', $today)->first();
 
         // 3. AMBIL NILAI XP
         if ($masterMisi) {

@@ -34,15 +34,17 @@ Route::post('/kontak', [ContactController::class, 'store'])->name('contacts.stor
 
 // 2. PUSTAKA WARISAN (ARTIKEL)
 Route::get('/pustaka-warisan', [ArticleController::class, 'index'])->name('pustakawarisan.index');
-Route::get('/pustaka-warisan/detail/{id}', [ArticleController::class, 'show'])->name('pustakawarisan.detail');
-Route::get('/pustaka-warisan/{slug}', [ArticleController::class, 'show'])->name('pustakawarisan.show');
+
 
 // Aksi User di Artikel (Butuh Login)
 Route::middleware(['auth'])->group(function () {
     // Create Artikel (Syarat Poin 150 - Opsional jika mau diaktifkan lagi, uncomment middleware points)
     // Route::middleware('points:150')->group(function() { ... });
     
-    Route::get('/pustaka-warisan/create', [ArticleController::class, 'create'])->name('pustakawarisan.create');
+    // TANPA AUTH
+    Route::get('/pustaka-warisan/create', [ArticleController::class, 'create'])
+        ->name('pustakawarisan.create');
+
     Route::post('/pustaka-warisan', [ArticleController::class, 'store'])->name('pustakawarisan.store');
     Route::post('/pustaka-warisan/upload-image', [ArticleController::class, 'uploadImage'])->name('pustakawarisan.upload_image');
 
@@ -51,10 +53,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pustaka-warisan/{id}/comment', [ArticleController::class, 'comment'])->name('articles.comment');
 });
 
+Route::get('/pustaka-warisan/detail/{id}', [ArticleController::class, 'show'])->name('pustakawarisan.detail');
+Route::get('/pustaka-warisan/{slug}', [ArticleController::class, 'show'])->name('pustakawarisan.show');
 
 // 3. JEJAK MAESTRO (MISI HARIAN & GAMIFIKASI)
 // Halaman Utama Jejak Maestro
-Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])->name('jejak.maestro');
+
+Route::get('/jejak-maestro', [JejakMaestroController::class, 'index'])->name('jejakmaestro');
 
 // Aksi Misi (Login & Verified)
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -74,7 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Route Dashboard User (Opsional, jika ada dashboard terpisah)
     Route::get('/dashboard', function () {
-        return view('dashboard'); 
+        return view('admin.dashboard'); 
     })->name('dashboard');
 });
 

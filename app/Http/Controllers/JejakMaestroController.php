@@ -24,7 +24,7 @@ class JejakMaestroController extends Controller
     {
         $today = Carbon::today();
         
-        return DailyMission::whereDate('date', $today)
+        return DailyMission::whereDate('created_at', $today)
             ->has('tasks') // Hanya ambil misi yang punya tugas (buatan admin)
             ->with(['tasks.article', 'tasks.quizzes.options']) 
             ->orderBy('id', 'desc')
@@ -108,19 +108,16 @@ class JejakMaestroController extends Controller
         // --- BAGIAN INI SUDAH DIPERBAIKI (Title & Description DIHAPUS agar tidak Error DB) ---
         $dailyMission = DailyMission::firstOrCreate(
             [
-                'user_id' => $user->id,
-                'date'    => $today,
-                'xp_read' => null // Penanda ini misi user, bukan master
+                'user_id' => $user->id
             ],
             [
-                // 'title' => ... (DIHAPUS: Agar tidak error Column not found)
-                // 'description' => ... (DIHAPUS: Agar tidak error Column not found)
                 'read_done' => false,
                 'share_done' => false,
                 'quiz_done' => false,
                 'points_today' => 0,
             ]
         );
+
 
         // Cek Badge (jika user baru buka halaman tapi poin sudah cukup)
         $this->checkAndAwardBadge($user, $dailyMission->points_today, $targetTotal);
@@ -157,7 +154,7 @@ class JejakMaestroController extends Controller
         $today = Carbon::today();
         
         $mission = DailyMission::where('user_id', $user->id)
-                                ->whereDate('date', $today)
+                                ->whereDate('created_at', $today)
                                 ->whereNull('xp_read')
                                 ->first();
 
@@ -186,7 +183,7 @@ class JejakMaestroController extends Controller
         $today = Carbon::today();
         
         $mission = DailyMission::where('user_id', $user->id)
-                                ->whereDate('date', $today)
+                                ->whereDate('created_at', $today)
                                 ->whereNull('xp_read')
                                 ->first();
 
@@ -214,7 +211,7 @@ class JejakMaestroController extends Controller
         
         // 1. Ambil Progress User
         $mission = DailyMission::where('user_id', $user->id)
-                                ->whereDate('date', $today)
+                                ->whereDate('created_at', $today)
                                 ->whereNull('xp_read')
                                 ->first();
 

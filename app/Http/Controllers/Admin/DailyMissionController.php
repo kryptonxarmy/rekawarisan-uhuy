@@ -20,7 +20,7 @@ class DailyMissionController extends Controller
     public function index()
     {
         $dailyMissions = DailyMission::with('tasks')
-            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('admin.daily-missions.index', compact('dailyMissions'));
@@ -68,7 +68,7 @@ class DailyMissionController extends Controller
             // 1. Create Daily Mission (Master Data)
             // DISINI PERUBAHAN UTAMANYA: Kita simpan XP ke tabel induk juga
             $dailyMission = DailyMission::create([
-                'date'        => $request->date,
+                'date'        => $request->created_at,
                 'title'       => $request->title,
                 'description' => $request->description,
                 'user_id'     => auth()->id(),
@@ -197,7 +197,7 @@ class DailyMissionController extends Controller
             // 1. Update Daily Mission
             // DISINI JUGA KITA UPDATE NILAI XP DI TABEL UTAMA
             $dailyMission->update([
-                'date'        => $request->date,
+                'date'        => $request->created_at,
                 'title'       => $request->title,
                 'description' => $request->description,
                 'user_id'     => auth()->id(),
